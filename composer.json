@@ -1,0 +1,19 @@
+{
+    "name": "Skpd/MuOnline",
+    "description": "Mu Online Server",
+    "minimum-stability": "alpha",
+    "authors": [
+        {
+            "name": "Dmitry Shabanov",
+            "email": "dm.skpd@gmail.com"
+        }
+    ],
+    "require": {
+        "react/react": "0.3.*"
+    },
+    "autoload": {
+        "psr-0": {
+            "MuServer": "src/"
+        }
+    }
+}
