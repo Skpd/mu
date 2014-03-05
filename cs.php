@@ -22,7 +22,9 @@ $socket->on('connection', function ($stream) use ($clients) {
     $clients->attach($stream);
 
     $serverList = new SServerlist;
-    $serverList->addServer(new Server(0, 1));
+    $server = new Server(0, 1);
+    $server->setIp('mu.dev0.in');
+    $serverList->addServer($server);
 
     $stream->on('data', function ($data) use ($clients, $stream, $serverList) {
         Protocol\Debug::dump($data, 'Received: ');
