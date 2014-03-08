@@ -28,7 +28,8 @@ class Factory
         if ($headCode === 0xC3) {
             $rawData = array_map('ord', str_split($rawData));
             $rawData = mu_decode_c3($rawData);
-            $rawData = implode('', array_map('chr', $rawData));
+
+            Debug::dump($rawData, 'Decoded: ');
 
             if (ord(substr($rawData, 2, 1)) === 0x01) {
                 return new LoginRequest(substr($rawData, 3));

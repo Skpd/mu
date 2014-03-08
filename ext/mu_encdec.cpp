@@ -32,9 +32,9 @@ Php::Value mu_decode_c3(Php::Parameters &params)
 		EncDecLogin(dst + 13, 10);
 	}
 
-    Php::Value r;
+    std::string result(dst, dst + decLength / sizeof dst[0]);
 
-    for (int i=0; i<decLength; i++) r[i] = dst[i];
+    Php::Value r(result);
 
     return r;
 }
@@ -46,7 +46,7 @@ extern "C"
         static Php::Extension extension("mu","0.1");
 
         extension.add("mu_decode_c3", mu_decode_c3, {
-            Php::ByVal("string", Php::stringType)
+            Php::ByVal("string", Php::Type::String)
         });
 
         return extension.module();
