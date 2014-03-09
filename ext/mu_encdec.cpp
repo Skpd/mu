@@ -3,6 +3,7 @@
 
 #include <phpcpp.h>
 #include "Decoder.h"
+#include "types.h"
 
 using namespace std;
 
@@ -18,25 +19,55 @@ Php::Value mu_decode_c3(Php::Parameters &params)
         src[i] = (int) params[0][i];
     }
 
-	unsigned char* dst = new unsigned char[(src[1] - 2) * 8 / 11];
+	unsigned char* dst = new unsigned char[512];
 
-	int decLength = DecryptC3asServer(dst, src+2, src[1] - 2);
+    int size = 0;
+    BYTE headcode, xcode = 0, subhead;
 
-	DecXor32(dst, 1, decLength);
+    if ((int) src[0] == 0xC1 || (int) src[0] == 0xC3) {
+        UCHAR * pBuf;
+        pBuf		= &src[0];
+        size		= pBuf[1];
+        headcode	= pBuf[2];
+        xcode		= src[0];
+    }
 
-	dst[0] = src[0];
-	dst[1] = decLength;
+    if ( xcode == 0xC3 )
+    {
+        int decLength = DecryptC3asServer(dst, src+2, src[1] - 2);
 
-	if (dst[0] == 0xC3 && dst[2] == 0x01) {
-		EncDecLogin(dst + 3, 10);
-		EncDecLogin(dst + 13, 10);
-	}
+        headcode		= dst[1];
 
-    std::string result(dst, dst + decLength / sizeof dst[0]);
+        DecXor32(dst + 1, 2, decLength - 1);
 
-    Php::Value r(result);
+        subhead	        = dst[2];
+        dst[1]		    = (decLength&0xFF)+2;
 
-    return r;
+//        printf(
+//            "headcode: %02X\nsubhead: %02X\nxcode: %02X\ndec length: %u\n",
+//            headcode, subhead, xcode, decLength
+//        );
+
+        dst[0] = xcode;
+        dst[2] = headcode;
+
+        if (headcode == 0xF1 && subhead == 0x01) {
+            EncDecLogin(dst + 3, 10);
+            EncDecLogin(dst + 13, 10);
+        }
+
+        params[1] = (int) xcode;
+        params[2] = (int) headcode;
+        params[3] = (int) subhead;
+
+        std::string result(dst, dst + decLength / sizeof dst[0]);
+        Php::Value r(result);
+        return r;
+    } else {
+        std::string result(src, src + size / sizeof src[0]);
+        Php::Value r(result);
+        return r;
+    }
 }
 
 extern "C"
@@ -46,7 +77,10 @@ extern "C"
         static Php::Extension extension("mu","0.1");
 
         extension.add("mu_decode_c3", mu_decode_c3, {
-            Php::ByVal("string", Php::Type::String)
+            Php::ByVal("data", Php::Type::String),
+            Php::ByRef("class", Php::Type::Numeric),
+            Php::ByRef("head", Php::Type::Numeric),
+            Php::ByRef("sub", Php::Type::Numeric)
         });
 
         return extension.module();
