@@ -4,22 +4,28 @@ namespace MuServer\Protocol\Season097\ServerClient;
 
 class LoginResult extends AbstractPacket
 {
-    const RESULT_BAD_PASSWORD = 0x00;
-    const RESULT_SUCCESS = 0x01;
-    const RESULT_BAD_ID = 0x03;
-    const RESULT_IN_USE = 0x04;
-    const RESULT_ACCOUNT_BANNED = 0x05;
-    const RESULT_FIXED_EXPIRATION = 0x0C;
-    const RESULT_DETERMINATION_EXPIRATION = 0x0D;
-    const RESULT_BLOCKED = 0x0E;
-    const RESULT_BAD_COUNTRY = 0xD2;
+    const BAD_PASSWORD = 0x00;
+    const SUCCESS = 0x01;
+    const IN_USE = 0x03;
+    const SERVER_IS_FULL = 0x04;
+    const ACCOUNT_BANNED = 0x05;
+    const NEW_VERSION_REQUIRED = 0x06;
+    const CONNECTION_ERROR = 0x07;
+    const CLOSED_BY_ATTEMPTS = 0x08;
+    const BO_CHARGE_INFO = 0x09;
+    const SUBSCRIPTION_IS_OVER = 0x0A;
+    const SUBSCRIPTION_IS_OVER2 = 0x0B;
+    const SUBSCRIPTION_IS_OVER_IP = 0x0C;
+    const INVALID_ACCOUNT = 0x0D;
+    const CONNECTION_ERROR2 = 0x0E;
 
-    protected $class = 0xC3;
-    protected $code = 0x01;
+    protected $class = 0xC1;
+    protected $code = 0xF1;
+    protected $subCode = 0x01;
 
     private $result;
 
-    public function __construct($result = self::RESULT_BAD_ID)
+    public function __construct($result = self::NEW_VERSION_REQUIRED)
     {
         $this->result = $result;
         $this->isDouble = false;
@@ -27,14 +33,6 @@ class LoginResult extends AbstractPacket
 
     public function setData()
     {
-        $this->data = range(0, 15, 1);
-
-        $this->data[0] = chr($this->result); // result
-
-//        $this->data[1] = chr(0); // unknown number ?
-//        $this->data[2] = chr(0); // user number?
-//        $this->data[2] = chr(0); // user db number?
-
-        $this->data = implode($this->data);
+        $this->data = chr($this->result); // result
     }
 }
