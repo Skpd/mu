@@ -16,8 +16,6 @@ class ServerInfo extends AbstractPacket
     function __construct(Server $server)
     {
         $this->server = $server;
-
-        $this->isDouble = false;
     }
 
     public function setData()
@@ -27,10 +25,5 @@ class ServerInfo extends AbstractPacket
         $this->data = implode(array_map('chr', $this->data));
 
         $this->data .= pack('v', $this->server->getPort());
-//        $port = $this->server->getPort();
-//        array_push($this->data, 0xD9);
-//        array_push($this->data, 0x95);
-
-//        $this->data = implode(array_map('chr', $this->data));
     }
 }

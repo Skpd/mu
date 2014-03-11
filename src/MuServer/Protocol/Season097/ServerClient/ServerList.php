@@ -10,6 +10,7 @@ class ServerList extends AbstractPacket
     protected $class = 0xC2;
     protected $code = 0xF4;
     protected $subCode = 0x02;
+    protected $isDouble = true;
 
     /** @var Server[]  */
     private $servers = [];

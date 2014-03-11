@@ -6,13 +6,13 @@ use MuServer\Protocol\Debug;
 
 abstract class AbstractPacket
 {
-    protected $class = 0xC2;
-    protected $code = 0xF4;
+    protected $class = null;
+    protected $code = null;
     protected $subCode = null;
 
     protected $data = [];
 
-    protected $isDouble = true;
+    protected $isDouble = false;
 
     abstract function setData();
 
@@ -20,28 +20,32 @@ abstract class AbstractPacket
     {
         $this->setData();
 
-        if ($this->subCode !== null) {
-            if ($this->isDouble) {
-                $packet = pack("cxxcca*", $this->class, $this->code, $this->subCode, $this->data);
+        if ($this->class !== null) {
+            if ($this->subCode !== null) {
+                if ($this->isDouble) {
+                    $packet = pack("cxxcca*", $this->class, $this->code, $this->subCode, $this->data);
+                } else {
+                    $packet = pack("cxcca*", $this->class, $this->code, $this->subCode, $this->data);
+                }
             } else {
-                $packet = pack("cxcca*", $this->class, $this->code, $this->subCode, $this->data);
+                if ($this->isDouble) {
+                    $packet = pack("cxxca*", $this->class, $this->code, $this->data);
+                } else {
+                    $packet = pack("cxca*", $this->class, $this->code, $this->data);
+                }
             }
-        } else {
+
             if ($this->isDouble) {
-                $packet = pack("cxxca*", $this->class, $this->code, $this->data);
+                $packet[1] = pack("c", (strlen($packet) >> 8) & 0xFF);
+                $packet[2] = pack("c", strlen($packet) & 0xFF);
             } else {
-                $packet = pack("cxca*", $this->class, $this->code, $this->data);
+                $packet[1] = pack("c", strlen($packet) & 0xFF);
             }
-        }
 
-        if ($this->isDouble) {
-            $packet[1] = pack("c", (strlen($packet) >> 8) & 0xFF);
-            $packet[2] = pack("c", strlen($packet) & 0xFF);
+            Debug::dump($packet);
         } else {
-            $packet[1] = pack("c", strlen($packet) & 0xFF);
+            $packet = pack("a*", $this->data);
         }
-
-        Debug::dump($packet);
 
         return $packet;
     }

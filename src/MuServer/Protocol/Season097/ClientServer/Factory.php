@@ -13,27 +13,45 @@ class Factory
 
     public static function buildPacket($rawData)
     {
-        $headCode = ord(substr($rawData, 0, 1));
+        $class = ord($rawData[0]);
+        $head  = $sub = 0;
 
-        if ($headCode === 0xC1) {
-            if (ord(substr($rawData, 2, 1)) === 0xF4) {
-                if (ord(substr($rawData, 3, 1)) === 0x03) {
+        if ($class === 0xC1) {
+            $head = ord($rawData[2]);
+            $sub  = ord($rawData[3]);
+
+            if ($head === 0xF4) {
+                if ($sub === 0x03) {
                     return new ServerInfo(substr($rawData, 4));
-                } elseif (ord(substr($rawData, 3, 1)) === 0x02) {
+                } elseif ($sub === 0x02) {
                     return new ServerList(substr($rawData, 4));
+                }
+            }
+
+            if ($head === 0xF3) {
+                if ($sub === 0x7A) {
+                    return new CharListRequest;
                 }
             }
         }
 
-        if ($headCode === 0xC3) {
+        if ($class === 0xC3) {
             $rawData = array_map('ord', str_split($rawData));
-            $rawData = mu_decode_c3($rawData);
+            $rawData = mu_decode_c3($rawData, $class, $head, $sub);
 
-            Debug::dump($rawData, 'Decoded: ');
-
-            if (ord(substr($rawData, 2, 1)) === 0x01) {
+            if ($head === 0xF1 && $sub === 0x01) {
                 return new LoginRequest(substr($rawData, 3));
             }
+
+            if ($head === 0xF1 && $sub === 0x03) {
+                return new CheckSum(substr($rawData, 3));
+            }
+
+            if ($head === 0x0E) {
+                return new Ping(substr($rawData, 3));
+            }
+
+            Debug::dump($rawData, 'Decoded: ');
         }
 
         Debug::dump($rawData, 'Unknown Packet: ');

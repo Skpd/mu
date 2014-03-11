@@ -12,7 +12,6 @@ class CheckSumResult extends AbstractPacket
     public function __construct($key = 0)
     {
         $this->key = $key;
-        $this->isDouble = false;
     }
 
     public function setData()

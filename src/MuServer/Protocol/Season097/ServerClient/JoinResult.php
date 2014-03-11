@@ -13,7 +13,6 @@ class JoinResult extends AbstractPacket
     public function __construct($isOk = true)
     {
         $this->isOk = $isOk;
-        $this->isDouble = false;
     }
 
     public function setData()

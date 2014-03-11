@@ -28,7 +28,6 @@ class LoginResult extends AbstractPacket
     public function __construct($result = self::NEW_VERSION_REQUIRED)
     {
         $this->result = $result;
-        $this->isDouble = false;
     }
 
     public function setData()
