@@ -53,16 +53,20 @@ $socket->on('connection', function ($conn) use ($clients, $players) {
             $char1->setIndex(0);
             $char1->setCharClass(\MuServer\Protocol\Season097\ServerClient\CharList::CLASS_MG);
             $char1->setSet(
-                  chr(0x60)   // right arm (weapon)
-                . chr(0x60)   // left arm (weapon / shield)
-                . chr(0xD6)   // helm and armor type
-                . chr(0x66)   // gloves and pants type
-                . chr(0x6F)   // boots and wings type
-                . chr(0xFF)   // boots and gloves level
-                . chr(0xFF)   // pants armor helm gloves level
-                . chr(0xFF)   // helm level
-                . chr(0x00)   // 2nd wings ?
-                . chr(0x00)   // pet + exc options ???
+                  chr(0xFF)   // right arm (weapon)
+                . chr(0xFF)   // left arm (weapon / shield)
+
+                . chr(0xFF)   // helm and armor type
+                . chr(0xFF)   // gloves and pants type
+                . chr(0xFF)   // boots and wings type
+
+                . chr(0x00)   // boots and gloves level
+                . chr(0x00)   // pants armor helm gloves level
+                . chr(0x00)   // helm level
+
+                . chr(0xF8)   // 2nd wings ?
+
+                . chr(0x00)   // is exc ? 1 << 1 | 1 << 2 ... 1 << 7
             );
 
             $char2->setName('asdfghjkl;');

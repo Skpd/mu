@@ -29,12 +29,12 @@ class CharList extends AbstractPacket
 
     public function setData()
     {
-        $this->data  = chr($this->index);
-        $this->data .= str_pad($this->name, 10, chr(0)) . chr(0); // null-terminated string
-        $this->data .= pack('v1', $this->level);
-        $this->data .= chr($this->controlCode);
-        $this->data .= chr($this->charClass);
-        $this->data .= str_pad($this->set, 10, chr(0x03));
+        $this->data  = chr($this->index); // [0]
+        $this->data .= str_pad($this->name, 10, chr(0)) . chr(0); // null-terminated string [11]
+        $this->data .= pack('v1', $this->level); // [13]
+        $this->data .= chr($this->controlCode); // [14]
+        $this->data .= chr($this->charClass); // [15]
+        $this->data .= str_pad($this->set, 10, chr(-1)); // [22] - [25]
     }
 
     /**
