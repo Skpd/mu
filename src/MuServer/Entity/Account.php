@@ -19,7 +19,7 @@ class Account
     }
 
     /**
-     * @return mixed
+     * @return Character[]
      */
     public function getCharacters()
     {

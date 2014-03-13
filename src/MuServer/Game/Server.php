@@ -3,12 +3,16 @@
 namespace MuServer\Game;
 
 use Doctrine\ORM\EntityNotFoundException;
+use MuServer\Entity\Account;
 use MuServer\Protocol\Season097\ClientServer\CharListRequest;
 use MuServer\Protocol\Season097\ClientServer\Factory;
 use MuServer\Protocol\Season097\ClientServer\LoginRequest;
 use MuServer\Protocol\Season097\ClientServer\Ping;
 use MuServer\Protocol\Season097\ServerClient\AbstractPacket as SCPacket;
 use MuServer\Protocol\Season097\ClientServer\AbstractPacket as CSPacket;
+use MuServer\Protocol\Season097\ServerClient\CharList;
+use MuServer\Protocol\Season097\ServerClient\CharListCount;
+use MuServer\Protocol\Season097\ServerClient\CharListResult;
 use MuServer\Protocol\Season097\ServerClient\JoinResult;
 use MuServer\Protocol\Season097\ServerClient\LoginResult;
 use MuServer\Repository\Account as AccountRepository;
@@ -71,7 +75,44 @@ class Server extends SocketServer implements ServiceLocatorAwareInterface
 
             $this->send($connection, $result);
         } elseif ($packet instanceof CharListRequest) {
+            /** @var Account $account */
+            $account = $this->players->offsetGet($connection);
 
+            $result = new CharListResult($this->clients->getHash($connection), $account->getId());
+            $this->send($connection, $result);
+
+            $chars = [];
+
+            foreach ($account->getCharacters() as $character) {
+                $char = new CharList();
+                $char->setIndex($character->getIndex());
+                $char->setCharClass($character->getClass());
+                $char->setControlCode($character->getCode());
+                $char->setLevel($character->getLevel());
+                $char->setName($character->getName());
+                $char->setSet(
+                      chr(0xFF)   // right arm (weapon)
+                    . chr(0xFF)   // left arm (weapon / shield)
+
+                    . chr(0xFF)   // helm and armor type
+                    . chr(0xFF)   // gloves and pants type
+                    . chr(0xFF)   // boots and wings type
+
+                    . chr(0x00)   // boots and gloves level
+                    . chr(0x00)   // pants armor helm gloves level
+                    . chr(0x00)   // helm level
+
+                    . chr(0xF8)   // 2nd wings ?
+
+                    . chr(0x00)   // is exc ? 1 << 1 | 1 << 2 ... 1 << 7
+                );
+
+                $chars[] = $char;
+            }
+
+
+            $result = new CharListCount($chars);
+            $this->send($connection, $result);
         }
     }
 
