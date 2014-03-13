@@ -34,4 +34,20 @@ class LoginResult extends AbstractPacket
     {
         $this->data = chr($this->result); // result
     }
+
+    /**
+     * @return int
+     */
+    public function getResult()
+    {
+        return $this->result;
+    }
+
+    /**
+     * @param int $result
+     */
+    public function setResult($result)
+    {
+        $this->result = $result;
+    }
 }

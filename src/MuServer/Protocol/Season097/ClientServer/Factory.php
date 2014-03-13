@@ -54,6 +54,6 @@ class Factory
             Debug::dump($rawData, 'Decoded: ');
         }
 
-        Debug::dump($rawData, 'Unknown Packet: ');
+        throw new \RuntimeException("Unexpected packet '" . Debug::dump($rawData, null, true) . "'");
     }
 }

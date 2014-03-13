@@ -9,7 +9,12 @@
         }
     ],
     "require": {
-        "react/react": "0.3.*"
+        "react/react": "0.3.*",
+        "doctrine/orm": "2.5.x-dev",
+        "zendframework/zend-servicemanager": "2.3.0",
+        "zendframework/zend-config": "2.3.0",
+        "doctrine/migrations": "dev-master",
+        "zendframework/zend-crypt": "2.3.0"
     },
     "autoload": {
         "psr-0": {
