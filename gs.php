@@ -51,9 +51,23 @@ $socket->on('connection', function ($conn) use ($clients, $players) {
 
             $char1->setName('qwertyuiop');
             $char1->setIndex(0);
+            $char1->setCharClass(\MuServer\Protocol\Season097\ServerClient\CharList::CLASS_MG);
+            $char1->setSet(
+                  chr(0x60)   // right arm (weapon)
+                . chr(0x60)   // left arm (weapon / shield)
+                . chr(0xD6)   // helm and armor type
+                . chr(0x66)   // gloves and pants type
+                . chr(0x6F)   // boots and wings type
+                . chr(0xFF)   // boots and gloves level
+                . chr(0xFF)   // pants armor helm gloves level
+                . chr(0xFF)   // helm level
+                . chr(0x00)   // 2nd wings ?
+                . chr(0x00)   // pet + exc options ???
+            );
 
             $char2->setName('asdfghjkl;');
-            $char2->setIndex(1);
+            $char2->setIndex(4);
+            $char2->setCharClass(\MuServer\Protocol\Season097\ServerClient\CharList::CLASS_ME);
 
             $result = new \MuServer\Protocol\Season097\ServerClient\CharListCount([$char1, $char2]);
             $conn->write($result);
