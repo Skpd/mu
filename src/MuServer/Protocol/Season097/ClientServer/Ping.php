@@ -12,6 +12,14 @@ class Ping extends AbstractPacket
     private $mAttackSpeed;
     private $unknown;
 
+    public function setData()
+    {
+        $this->data = pack('N', $this->tick);
+        $this->data .= pack('N', $this->pAttackSpeed);
+        $this->data .= pack('N', $this->mAttackSpeed);
+        $this->data .= pack('c', $this->unknown);
+    }
+
     function __construct($rawData)
     {
         $this->data = $rawData;

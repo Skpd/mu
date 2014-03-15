@@ -12,8 +12,14 @@ abstract class AbstractPacket
 
     protected $data = '';
 
+    abstract public function setData();
+
     public function buildPacket()
     {
+        if (empty($this->data)) {
+            $this->setData();
+        }
+
         if ($this->subCode !== null) {
             $packet = pack("cxcca*", $this->class, $this->code, $this->subCode, $this->data);
         } else {

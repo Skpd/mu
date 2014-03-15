@@ -7,4 +7,9 @@ class CharListRequest extends AbstractPacket
     protected $class = 0xC1;
     protected $code = 0xF3;
     protected $subCode = 0x7A;
+
+    public function setData()
+    {
+        $this->data = '';
+    }
 }

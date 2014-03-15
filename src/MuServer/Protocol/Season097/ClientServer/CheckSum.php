@@ -9,6 +9,11 @@ class CheckSum extends AbstractPacket
 
     private $key;
 
+    public function setData()
+    {
+        $this->data = pack('N', $this->key);
+    }
+
     function __construct($rawData)
     {
         $this->data = $rawData;

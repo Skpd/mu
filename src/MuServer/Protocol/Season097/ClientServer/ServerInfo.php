@@ -10,6 +10,11 @@ class ServerInfo extends AbstractPacket
 
     private $serverCode;
 
+    public function setData()
+    {
+        $this->data = chr($this->serverCode);
+    }
+
     function __construct($rawData)
     {
         $this->serverCode = ord($rawData[0]);

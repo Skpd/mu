@@ -13,6 +13,16 @@ class LoginRequest extends AbstractPacket
     private $version;
     private $serial;
 
+    public function setData()
+    {
+        $this->data = str_pad($this->login, 10, chr(0));
+        $this->data .= str_pad($this->password, 10, chr(0));
+        $this->data .= str_pad($this->password, 10, chr(0));
+        $this->data .= pack('N', $this->tick);
+        $this->data .= $this->version;
+        $this->data .= $this->serial;
+    }
+
     function __construct($rawData)
     {
         $this->data = $rawData;

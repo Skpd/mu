@@ -10,6 +10,11 @@ class MapJoinRequest extends AbstractPacket
 
     private $name;
 
+    public function setData()
+    {
+        $this->data = str_pad($this->name, 10, chr(0));
+    }
+
     function __construct($rawData)
     {
         $this->data = $rawData;
