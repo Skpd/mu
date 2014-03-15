@@ -2,6 +2,8 @@
 
 namespace MuServer\Protocol\Season097\ServerClient;
 
+use MuServer\Entity\Character;
+
 class CharList extends AbstractPacket
 {
     const CLASS_DW = 0;
@@ -26,6 +28,31 @@ class CharList extends AbstractPacket
     private $set = '';
     /** char */
     private $charClass = self::CLASS_BK;
+
+    public function __construct(Character $character)
+    {
+        $this->setIndex($character->getIndex());
+        $this->setCharClass($character->getClass());
+        $this->setControlCode($character->getCode());
+        $this->setLevel($character->getLevel());
+        $this->setName($character->getName());
+        $this->setSet(
+            chr(0xFF)   // right arm (weapon)
+            . chr(0xFF)   // left arm (weapon / shield)
+
+            . chr(0xFF)   // helm and armor type
+            . chr(0xFF)   // gloves and pants type
+            . chr(0xFF)   // boots and wings type
+
+            . chr(0x00)   // boots and gloves level
+            . chr(0x00)   // pants armor helm gloves level
+            . chr(0x00)   // helm level
+
+            . chr(0xF8)   // 2nd wings ?
+
+            . chr(0x00)   // is exc ? 1 << 1 | 1 << 2 ... 1 << 7
+        );
+    }
 
     public function setData()
     {

@@ -12,6 +12,24 @@ class Character
     private $class;
     private $inventoryItems;
 
+    private $account;
+
+    /**
+     * @return Account
+     */
+    public function getAccount()
+    {
+        return $this->account;
+    }
+
+    /**
+     * @param mixed $account
+     */
+    public function setAccount($account)
+    {
+        $this->account = $account;
+    }
+
     /**
      * @return mixed
      */

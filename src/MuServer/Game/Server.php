@@ -7,16 +7,20 @@ use MuServer\Entity\Account;
 use MuServer\Protocol\Season097\ClientServer\CharListRequest;
 use MuServer\Protocol\Season097\ClientServer\Factory;
 use MuServer\Protocol\Season097\ClientServer\LoginRequest;
+use MuServer\Protocol\Season097\ClientServer\MapJoinRequest;
 use MuServer\Protocol\Season097\ClientServer\Ping;
 use MuServer\Protocol\Season097\ServerClient\AbstractPacket as SCPacket;
 use MuServer\Protocol\Season097\ClientServer\AbstractPacket as CSPacket;
+use MuServer\Protocol\Season097\ServerClient\CharInfoResult;
 use MuServer\Protocol\Season097\ServerClient\CharList;
 use MuServer\Protocol\Season097\ServerClient\CharListCount;
 use MuServer\Protocol\Season097\ServerClient\CharListResult;
+use MuServer\Protocol\Season097\ServerClient\JoinPosition;
 use MuServer\Protocol\Season097\ServerClient\JoinResult;
 use MuServer\Protocol\Season097\ServerClient\LoginResult;
 use MuServer\Repository\Account as AccountRepository;
 use MuServer\Repository\InvalidPasswordException;
+use MuServer\Security;
 use React\EventLoop\LoopInterface;
 use React\Socket\ConnectionInterface;
 use React\Socket\Server as SocketServer;
@@ -84,28 +88,7 @@ class Server extends SocketServer implements ServiceLocatorAwareInterface
             $chars = [];
 
             foreach ($account->getCharacters() as $character) {
-                $char = new CharList();
-                $char->setIndex($character->getIndex());
-                $char->setCharClass($character->getClass());
-                $char->setControlCode($character->getCode());
-                $char->setLevel($character->getLevel());
-                $char->setName($character->getName());
-                $char->setSet(
-                      chr(0xFF)   // right arm (weapon)
-                    . chr(0xFF)   // left arm (weapon / shield)
-
-                    . chr(0xFF)   // helm and armor type
-                    . chr(0xFF)   // gloves and pants type
-                    . chr(0xFF)   // boots and wings type
-
-                    . chr(0x00)   // boots and gloves level
-                    . chr(0x00)   // pants armor helm gloves level
-                    . chr(0x00)   // helm level
-
-                    . chr(0xF8)   // 2nd wings ?
-
-                    . chr(0x00)   // is exc ? 1 << 1 | 1 << 2 ... 1 << 7
-                );
+                $char = new CharList($character);
 
                 $chars[] = $char;
             }
@@ -113,7 +96,20 @@ class Server extends SocketServer implements ServiceLocatorAwareInterface
 
             $result = new CharListCount($chars);
             $this->send($connection, $result);
+        } elseif ($packet instanceof MapJoinRequest) {
+            //TODO: unpack name and select right character
+
+            /** @var Account $account */
+            $account = $this->players->offsetGet($connection);
+
+            $result = new CharInfoResult(1, $packet->getName(), 1);
+            $this->send($connection, $result);
+
+            $result = new JoinPosition($account->getCharacters()->first(), $this->clients->getHash($connection));
+            $this->send($connection, $result);
         }
+
+//        $this->serviceLocator->get('orm_em')->clear();
     }
 
     public function createConnection($socket)

@@ -25,6 +25,7 @@
             </join-table>
         </many-to-many>
 
+        <many-to-one target-entity="MuServer\Entity\Account" field="account" />
     </entity>
 
 </doctrine-mapping>

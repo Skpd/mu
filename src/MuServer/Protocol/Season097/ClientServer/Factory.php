@@ -31,6 +31,8 @@ class Factory
             if ($head === 0xF3) {
                 if ($sub === 0x7A) {
                     return new CharListRequest;
+                } elseif ($sub === 0x79) {
+                    return new MapJoinRequest(substr($rawData, 4));
                 }
             }
         }
