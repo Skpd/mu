@@ -92,8 +92,10 @@ int DecryptC3(unsigned char*Dest, unsigned char*Src, int Len, unsigned long*Keys
 	if (Len>0)
 		do {
 			if (DecC3Bytes(TempDest, TempSrc, Keys)<0) {
-			    cout << "Decoding failed" << endl;
+//			    cout << "Decoding failed" << endl;
 				return 0;
+			} else {
+//			    cout << DecLen + 11 << endl;
 			}
 			DecLen+=11;
 			TempSrc+=11;
@@ -115,7 +117,7 @@ int DecC3Bytes(unsigned char*Dest, unsigned char*Src, unsigned long*Keys) {
 		TempDec[i]=TempDec[i]^Keys[8+i]^(TempDec[i+1]&0xFFFF);
 	}
 
-	unsigned long Temp=0, Temp1;
+	unsigned int Temp=0, Temp1;
 	for (int i=0; i<4; i++) {
 		Temp1=((Keys[4+i]*(TempDec[i]))%(Keys[i]))^Keys[i+8]^Temp;
 		Temp=TempDec[i]&0xFFFF;
@@ -126,18 +128,26 @@ int DecC3Bytes(unsigned char*Dest, unsigned char*Src, unsigned long*Keys) {
 	((unsigned char*)TempDec)[0]=((unsigned char*)TempDec)[1]^ ((unsigned char*)TempDec)[0]^0x3d;
 	unsigned char XorByte=0xF8;
 	for (int i=0; i<8; i++) {
+//	    printf("%i\n", Dest[i]);
 		XorByte^=Dest[i];
 	}
-	if (XorByte!=((unsigned char*)TempDec)[1])
-		return -1;
-	else
+	if (XorByte!=((unsigned char*)TempDec)[1]) {
+//	    cout << "Xor byte check failed:" << (int) XorByte << " - " << (int) ((unsigned char*)TempDec)[1] << endl;
+	    return -1;
+	} else {
 		return ((unsigned char*)TempDec)[0];
+    }
 }
 int HashBuffer(unsigned char*Dest, int Param10, unsigned char*Src, int Param18, int Param1c) {
 	int BuffLen=((Param1c+Param18-1)>>3)-(Param18>>3)+2;
 	unsigned char *Temp=new unsigned char[BuffLen];
 	Temp[BuffLen-1]=0;
 	memcpy(Temp, Src+(Param18>>3), BuffLen-1);
+//    cout << "temp:" << endl;
+//	for (int i=0; i<BuffLen; i++) {
+//	    printf("%02X\n", Temp[i]);
+//	}
+//    cout << endl;
 	int EAX=(Param1c+Param18)&7;
 	if (EAX)
 		Temp[BuffLen-2]&=(0xff)<<(8-EAX);
@@ -220,7 +230,8 @@ int EncryptC3(unsigned char*Dest, unsigned char*Src, int Len,
 }
 void EncC3Bytes(unsigned char*Dest, unsigned char*Src, int Len,
 		unsigned long*Keys) {
-	unsigned long Temp=0, TempEnc[4];
+	unsigned int Temp=0;
+	unsigned int TempEnc[4];
 	for (int i=0; i<4; i++) {
 		TempEnc[i]=(((Keys[i+8] ^ ((unsigned short*)Src)[i] ^ Temp) * Keys[i+4]) % Keys[i]);
 		Temp=TempEnc[i]&0xFFFF;
@@ -228,7 +239,7 @@ void EncC3Bytes(unsigned char*Dest, unsigned char*Src, int Len,
 	for (int i=0; i<3; i++)
 		TempEnc[i]=TempEnc[i]^Keys[8+i]^(TempEnc[i+1]&0xFFFF);
 	int j=0;
-	Dest = { 0 };
+	ZeroMemory(Dest, 11);
 	for (int i=0; i<4; i++) {
 		j=HashBuffer(Dest, j, (unsigned char*)TempEnc+4*i, 0, 16);
 		j=HashBuffer(Dest, j, (unsigned char*)TempEnc+4*i, 22, 2);

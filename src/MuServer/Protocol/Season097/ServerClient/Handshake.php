@@ -11,4 +11,9 @@ class Handshake extends AbstractPacket
     {
         $this->data = chr(1);
     }
+
+    public static function buildFrom($raw)
+    {
+        return new self();
+    }
 }

@@ -5,7 +5,8 @@ namespace MuServer\Protocol\Season097\ClientServer;
 class LoginRequest extends AbstractPacket
 {
     protected $class = 0xC3;
-    protected $code = 0x01;
+    protected $code = 0xF1;
+    protected $subCode = 0x00;
 
     private $login;
     private $password;
@@ -16,7 +17,6 @@ class LoginRequest extends AbstractPacket
     public function setData()
     {
         $this->data = str_pad($this->login, 10, chr(0));
-        $this->data .= str_pad($this->password, 10, chr(0));
         $this->data .= str_pad($this->password, 10, chr(0));
         $this->data .= pack('N', $this->tick);
         $this->data .= $this->version;

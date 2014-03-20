@@ -5,18 +5,25 @@ chdir(dirname(dirname(__DIR__)));
 require 'vendor/autoload.php';
 
 $packet = [0xC3, 0x44, 0xAD, 0xF8, 0x00, 0xFA, 0x8E, 0x3C, 0x50, 0x10, 0xEC, 0xA7, 0x92, 0x83, 0x3E, 0x49, 0xDE, 0x93, 0xC6, 0x13, 0xDA, 0x88, 0x83, 0xB6, 0x9B, 0x04, 0x3A, 0x4B, 0x96, 0x27, 0xF1, 0xA1, 0x04, 0x44, 0x71, 0xCE, 0x18, 0x16, 0x1A, 0xA8, 0x0D, 0x70, 0xF5, 0x55, 0xA9, 0x9C, 0x28, 0xF6, 0x71, 0x9D, 0xC4, 0x30, 0xC3, 0x66, 0xE8, 0xED, 0xD8, 0xD3, 0xE5, 0x0E, 0x43, 0xCE, 0x13, 0x90, 0x36, 0x15, 0xDD, 0xE8];
-//$packet = [0xC3, 0x0D, 0x45, 0xC8, 0x29, 0x3B, 0x44, 0xE9, 0x20, 0x94, 0x1D, 0x96, 0xAE];
-//$packet = [0xC3, 0x04, 0xF3, 0x7A];
 
-$result = mu_decode_c3($packet, $class, $head, $sub);
-//var_dump($result, $class, $head, $sub);
+$decodeResult = mu_decode_c3($packet, $class, $head, $sub);
 
-assert(!empty($result) === true);
+assert(!empty($decodeResult) === true);
 
-assert($class === 0xC3);
-assert($head === 0xF1);
-assert($sub === 0x01);
+assert($class === 0xC3) || var_dump($class);
+assert($head === 0xF1) || var_dump(dechex($head));
+assert($sub === 0x01) || var_dump($sub);
 
-assert(trim(substr($result, 3, 10)) === "skpd");
-assert(trim(substr($result, -16)) === "FIRSTPHPMUSERVER");
-assert(trim(substr($result, -21, 5)) === "09700");
+assert(trim(substr($decodeResult, 3, 10)) === "skpd") || var_dump(trim(substr($decodeResult, 3, 10)));
+assert(trim(substr($decodeResult, -16)) === "FIRSTPHPMUSERVER") || var_dump(trim(substr($decodeResult, -16)));
+assert(trim(substr($decodeResult, -21, 5)) === "09700") || var_dump(trim(substr($decodeResult, -21, 5)));
+
+$toEncode = array_map('hexdec', array_map('bin2hex', str_split($decodeResult)));
+
+$encodeResult = mu_encode_c3($toEncode, 0xF1, 0x01);
+
+$packet = array_map('hexdec', array_map('bin2hex', str_split($encodeResult)));
+
+$secondDecodeResult = mu_decode_c3($packet, $class, $head, $sub);
+
+assert($secondDecodeResult === $decodeResult) || var_dump($decodeResult, $secondDecodeResult);

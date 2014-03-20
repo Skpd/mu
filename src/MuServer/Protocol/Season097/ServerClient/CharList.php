@@ -50,7 +50,7 @@ class CharList extends AbstractPacket
 
             . chr(0xF8)   // 2nd wings ?
 
-            . chr(0x00)   // is exc ? 1 << 1 | 1 << 2 ... 1 << 7
+            . chr(0xFE)   // is exc ? 1 << 1 | 1 << 2 ... 1 << 7
         );
     }
 
@@ -62,6 +62,19 @@ class CharList extends AbstractPacket
         $this->data .= chr($this->controlCode); // [14]
         $this->data .= chr($this->charClass); // [15]
         $this->data .= str_pad($this->set, 10, chr(-1)); // [22] - [25]
+    }
+
+    public static function buildFrom($raw)
+    {
+        $character = new Character();
+        $character->setIndex(ord($raw[0]));
+        $character->setName(trim(substr($raw, 1, 10)));
+        $character->setLevel(current(unpack('v', substr($raw, 13, 2))));
+        $character->setCode(ord($raw[15]));
+        $character->setCode(ord($raw[16]));
+        $character->setCode(substr($raw, 17));
+
+        return new self($character);
     }
 
     /**

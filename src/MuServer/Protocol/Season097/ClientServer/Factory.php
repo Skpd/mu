@@ -41,7 +41,7 @@ class Factory
             $rawData = array_map('ord', str_split($rawData));
             $rawData = mu_decode_c3($rawData, $class, $head, $sub);
 
-            if ($head === 0xF1 && $sub === 0x01) {
+            if ($head === 0xF1 && ($sub === 0x01 || $sub === 0xC1)) {
                 return new LoginRequest(substr($rawData, 3));
             }
 

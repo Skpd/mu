@@ -50,4 +50,9 @@ class LoginResult extends AbstractPacket
     {
         $this->result = $result;
     }
+
+    public static function buildFrom($raw)
+    {
+        return new self(ord($raw[5]));
+    }
 }

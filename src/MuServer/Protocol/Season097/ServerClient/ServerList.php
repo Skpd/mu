@@ -19,7 +19,6 @@ class ServerList extends AbstractPacket
     {
         $this->data = [];
 
-//        $this->data[0] = 0;
         $this->data[0] = 0;
 
         foreach ($this->servers as $n => $server) {
@@ -33,6 +32,24 @@ class ServerList extends AbstractPacket
         }
 
         $this->data = implode(array_map('chr', $this->data));
+    }
+
+    public static function buildFrom($raw)
+    {
+        $servers = [];
+
+        for ($i = 0; $i < ord($raw[0]); $i++) {
+            $server = new Server();
+            $server->setCode(ord($raw[$i * 4 + 1]) % 20);
+            $server->setGroup(floor(ord($raw[$i * 4 + 1]) / 20));
+
+            $servers[] = $server;
+        }
+
+        $packet = new self();
+        $packet->setServers($servers);
+
+        return $packet;
     }
 
     /**

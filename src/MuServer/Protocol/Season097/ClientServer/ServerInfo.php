@@ -30,4 +30,14 @@ class ServerInfo extends AbstractPacket
     {
         return floor($this->serverCode / 20);
     }
+
+    public function setServerCode($code)
+    {
+        $this->serverCode += $code % 20;
+    }
+
+    public function setServerGroup($group)
+    {
+        $this->serverCode += $group * 20;
+    }
 }

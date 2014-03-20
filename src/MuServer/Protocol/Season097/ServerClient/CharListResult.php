@@ -20,4 +20,9 @@ class CharListResult extends AbstractPacket
     {
         $this->data = str_pad($this->accountId, 10, chr(0)) . chr($this->connectionId);
     }
+
+    public static function buildFrom($raw)
+    {
+        return new self($raw[13], trim(substr($raw, 3, 10)));
+    }
 }

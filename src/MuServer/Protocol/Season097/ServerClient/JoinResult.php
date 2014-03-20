@@ -8,11 +8,13 @@ class JoinResult extends AbstractPacket
     protected $code = 0xF1;
     protected $subCode = 0;
 
-    private $isOk = true;
+    private $isOk;
+    private $version;
 
-    public function __construct($isOk = true)
+    public function __construct($isOk = true, $version = '0.97.00')
     {
         $this->isOk = $isOk;
+        $this->version = str_split(preg_replace('/[^0-9]/', '', $version));
     }
 
     public function setData()
@@ -22,16 +24,15 @@ class JoinResult extends AbstractPacket
         $this->data[1] = chr(0); // unknown
         $this->data[2] = chr(0); // join attempts?
 
-        // version:
-        // human readable - 0.97.00
-        // server version (strip dots) - 09700
-        // client version - 1;:45
-        $this->data[3] = chr(0x30);
-        $this->data[4] = chr(0x39);
-        $this->data[5] = chr(0x37);
-        $this->data[6] = chr(0x30);
-        $this->data[7] = chr(0x30);
+        foreach ($this->version as $char) {
+            $this->data[] = chr(ord(intval($char)));
+        }
 
         $this->data = implode($this->data);
+    }
+
+    public static function buildFrom($raw)
+    {
+        return new self(ord($raw[0]) == 1, substr($raw, 3));
     }
 }

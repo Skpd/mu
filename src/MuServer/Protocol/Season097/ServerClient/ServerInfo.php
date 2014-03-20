@@ -26,4 +26,22 @@ class ServerInfo extends AbstractPacket
 
         $this->data .= pack('v', $this->server->getPort());
     }
+
+    public static function buildFrom($raw)
+    {
+        $server = new Server();
+
+        $server->setIp(trim(substr($raw, 0, 15)));
+        $server->setPort(current(unpack('v', substr($raw, 16, 2))));
+
+        return new self($server);
+    }
+
+    /**
+     * @return Server
+     */
+    public function getServer()
+    {
+        return $this->server;
+    }
 }

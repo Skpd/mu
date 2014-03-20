@@ -27,4 +27,9 @@ class CharInfoResult extends AbstractPacket
         $this->data .= str_pad($this->name, 10, chr(0));
         $this->data .= chr($this->index);
     }
+
+    public static function buildFrom($raw)
+    {
+        return new self(trim(substr($raw, 0, 10)), trim(substr($raw, 10, 10)), ord($raw[20]));
+    }
 }

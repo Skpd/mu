@@ -59,8 +59,14 @@ class Server extends SocketServer implements ServiceLocatorAwareInterface
             $packet = Factory::buildPacket($data);
         } catch (\RuntimeException $e) {
             echo $e->getMessage() . PHP_EOL;
+            var_dump($data);
+            return;
+        } catch (\Exception $e) {
+            echo $e->getMessage() . PHP_EOL;
+            var_dump($data);
             return;
         }
+
 
         if ($packet instanceof Ping) {
             // count ticks
