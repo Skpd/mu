@@ -59,11 +59,9 @@ class Server extends SocketServer implements ServiceLocatorAwareInterface
             $packet = Factory::buildPacket($data);
         } catch (\RuntimeException $e) {
             echo $e->getMessage() . PHP_EOL;
-            var_dump($data);
             return;
         } catch (\Exception $e) {
             echo $e->getMessage() . PHP_EOL;
-            var_dump($data);
             return;
         }
 
@@ -107,12 +105,12 @@ class Server extends SocketServer implements ServiceLocatorAwareInterface
 
             /** @var Account $account */
             $account = $this->players->offsetGet($connection);
-
-            $result = new CharInfoResult(1, $packet->getName(), 1);
-            $this->send($connection, $result);
-
-            $result = new JoinPosition($account->getCharacters()->first(), $this->clients->getHash($connection));
-            $this->send($connection, $result);
+            var_dump($packet->getName());
+//            $result = new CharInfoResult(1, $packet->getName(), 1);
+//            $this->send($connection, $result);
+//
+//            $result = new JoinPosition($account->getCharacters()->first(), $this->clients->getHash($connection));
+//            $this->send($connection, $result);
         }
 
 //        $this->serviceLocator->get('orm_em')->clear();

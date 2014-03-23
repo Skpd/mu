@@ -56,14 +56,32 @@ function gsConnect($ip, $port) {
 
         $stream->write($result->buildPacket());
 
-        $stream->on('data', function ($data) use ($stream) {
-            \MuServer\Protocol\Debug::dump($data, 'Received: ');
-            $packet = \MuServer\Protocol\Season097\ServerClient\Factory::buildPacket($data);
+        $stream->on('data', function ($data, $connection) use ($stream) {
+            if (ord($data[0]) == 0xC1) {
+                if (strlen($data) != ord($data[1])) {
+                    $packet = substr($data, 0, ord($data[1]));
+                    $stop = false;
+                    $next = substr($data, ord($data[1]));
+                } else {
+                    $packet = $data;
+                    $stop = true;
+                }
 
-            if ($packet instanceof \MuServer\Protocol\Season097\ServerClient\LoginResult) {
-                $stream->write(new \MuServer\Protocol\Season097\ClientServer\CharListRequest());
+                \MuServer\Protocol\Debug::dump($packet, 'Received: ');
+                $packet = \MuServer\Protocol\Season097\ServerClient\Factory::buildPacket($packet);
+
+                if ($packet instanceof \MuServer\Protocol\Season097\ServerClient\LoginResult) {
+                    $stream->write(new \MuServer\Protocol\Season097\ClientServer\CharListRequest());
+                } else if ($packet instanceof \MuServer\Protocol\Season097\ServerClient\CharListCount) {
+                    $result = new \MuServer\Protocol\Season097\ClientServer\MapJoinRequest('');
+                    $result->setName('Skpd');
+                    $stream->write($result);
+                }
+
+                if (!$stop) {
+                    $stream->emit('data', [$next, $connection]);
+                }
             }
-//            $stream->end();
         });
     });
 

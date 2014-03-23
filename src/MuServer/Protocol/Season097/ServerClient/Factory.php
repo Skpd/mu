@@ -18,6 +18,10 @@ class Factory
                 return Handshake::buildFrom(substr($rawData, 3));
             }
 
+            if ($head == 1) {
+                return CharListResult::buildFrom(substr($rawData, 3));
+            }
+
             if ($head == 0xF4) {
                 if ($sub == 3) {
                     return ServerInfo::buildFrom(substr($rawData, 4));
@@ -26,7 +30,17 @@ class Factory
 
             if ($head == 0xF1) {
                 if ($sub == 0) {
+                    return JoinResult::buildFrom(substr($rawData, 4));
+                }
+
+                if ($sub == 1) {
                     return LoginResult::buildFrom(substr($rawData, 4));
+                }
+            }
+
+            if ($head == 0xF3) {
+                if ($sub == 0) {
+                    return CharListCount::buildFrom(substr($rawData, 4));
                 }
             }
         }

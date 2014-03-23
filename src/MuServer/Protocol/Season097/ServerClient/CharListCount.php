@@ -38,4 +38,21 @@ class CharListCount extends AbstractPacket
 
         return new self($chars);
     }
+
+    /**
+     * @return CharList[]
+     */
+    public function getChars()
+    {
+        return $this->chars;
+    }
+
+    /**
+     * @param CharList[] $chars
+     */
+    public function setChars($chars)
+    {
+        $this->chars = $chars;
+    }
+
 }

@@ -23,6 +23,6 @@ class CharListResult extends AbstractPacket
 
     public static function buildFrom($raw)
     {
-        return new self($raw[13], trim(substr($raw, 3, 10)));
+        return new self($raw[10], trim(substr($raw, 0, 10)));
     }
 }
