@@ -23,7 +23,8 @@ $socket->on('connection', function ($stream) use ($clients) {
 
     $serverList = new SServerlist;
     $server = new Server(0, 0);
-    $server->setIp('mu.dev0.in');
+//    $server->setIp('mu.dev0.in');
+    $server->setIp('192.168.1.105');
     $serverList->addServer($server);
 
     $stream->on('data', function ($data) use ($clients, $stream, $serverList) {

@@ -75,13 +75,20 @@ class Server extends SocketServer implements ServiceLocatorAwareInterface
                 $account = $this->accountRepository->authenticate($packet->getLogin(), $packet->getPassword());
 
                 $this->players->attach($connection, $account);
+                $this->send($connection, $result);
             } catch (EntityNotFoundException $e) {
                 $result->setResult(LoginResult::INVALID_ACCOUNT);
+                $this->send($connection, $result);
+
+                echo "Disconnected [{$connection->getRemoteAddress()}]: invalid account '{$packet->getLogin()}'\n";
+                $connection->close();
             } catch (InvalidPasswordException $e) {
                 $result->setResult(LoginResult::BAD_PASSWORD);
-            }
+                $this->send($connection, $result);
 
-            $this->send($connection, $result);
+                echo "Disconnected [{$connection->getRemoteAddress()}]: invalid password '{$packet->getPassword()}'\n";
+                $connection->close();
+            }
         } elseif ($packet instanceof CharListRequest) {
             /** @var Account $account */
             $account = $this->players->offsetGet($connection);

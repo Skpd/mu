@@ -53,6 +53,6 @@ class LoginResult extends AbstractPacket
 
     public static function buildFrom($raw)
     {
-        return new self(ord($raw[5]));
+        return new self(ord($raw[0]));
     }
 }

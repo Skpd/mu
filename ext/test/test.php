@@ -18,12 +18,21 @@ assert(trim(substr($decodeResult, 3, 10)) === "skpd") || var_dump(trim(substr($d
 assert(trim(substr($decodeResult, -16)) === "FIRSTPHPMUSERVER") || var_dump(trim(substr($decodeResult, -16)));
 assert(trim(substr($decodeResult, -21, 5)) === "09700") || var_dump(trim(substr($decodeResult, -21, 5)));
 
-$toEncode = array_map('hexdec', array_map('bin2hex', str_split($decodeResult)));
+$toEncode      = array_map('hexdec', array_map('bin2hex', str_split($decodeResult)));
+var_dump($toEncode);
+$encodeResult  = mu_encode_c3($toEncode, 0xF1, 0x01);
+$encodedPacket = array_map('hexdec', array_map('bin2hex', str_split($encodeResult)));
 
-$encodeResult = mu_encode_c3($toEncode, 0xF1, 0x01);
-
-$packet = array_map('hexdec', array_map('bin2hex', str_split($encodeResult)));
-
-$secondDecodeResult = mu_decode_c3($packet, $class, $head, $sub);
+foreach ($encodedPacket as $k => $v) {
+    if ($v != $packet[$k]) {
+        echo "ORIG\tPHP\n";
+        for ($i = $k; $i < $k + 4; $i++) {
+            printf("%02X\t%02X\n", $packet[$i], $encodedPacket[$i]);
+        }
+        exit(1);
+    }
+}
+var_dump(strtoupper(implode('', array_map('dechex', $encodedPacket))));
+$secondDecodeResult = mu_decode_c3($encodedPacket, $class, $head, $sub);
 
 assert($secondDecodeResult === $decodeResult) || var_dump($decodeResult, $secondDecodeResult);

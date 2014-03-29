@@ -95,15 +95,15 @@ Php::Value mu_encode_c3(Php::Parameters &params)
     unsigned int head  = (int) params[1];
     unsigned int sub   = (int) params[2] + 0x55;
 
-    if (head == 0xF1 && sub == 0x56) {
+    if (head == 0xF1 && (sub == 0x56 || sub == 0x55)) {
         EncDecLogin(src + 3, 10);
         EncDecLogin(src + 13, 10);
     }
-
     src[2] = sub;
 
     EncXor32(src, 1, size - 1);
 
+    src[0] = 0x00;
     src[1] = head;
 
     int encLength = EncryptC3asClient(dst + 2, src, size - 2);

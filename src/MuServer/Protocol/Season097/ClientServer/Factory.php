@@ -38,6 +38,7 @@ class Factory
         }
 
         if ($class === 0xC3) {
+            Debug::dump($rawData, 'To decode: ');
             $rawData = array_map('ord', str_split($rawData));
             $rawData = mu_decode_c3($rawData, $class, $head, $sub);
 

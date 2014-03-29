@@ -31,8 +31,10 @@ abstract class AbstractPacket
         if ($this->class === 0xC3) {
             $packet = array_map('hexdec', array_map('bin2hex', str_split($this->data)));
             array_unshift($packet, 0, 0, 0);
-            $packet[1] = sizeof($packet) + 2;
-            $packet = mu_encode_c3($packet, $this->code, $this->subCode);
+            $packet[0] = 0xC3;
+            $packet[1] = strlen($this->data) + 5;
+            $packet[2] = $this->code;
+            $packet = mu_encode_c3($packet, $this->code, $this->subCode + 1);
         }
 
         Debug::dump($packet, 'Sent: ');

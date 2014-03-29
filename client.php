@@ -37,6 +37,7 @@ function csConnect($ip, $port) {
 }
 
 function gsConnect($ip, $port) {
+    echo "Connecting to $ip:$port\n";
     $loop = React\EventLoop\Factory::create();
 
     $dnsResolverFactory = new React\Dns\Resolver\Factory();
@@ -46,15 +47,6 @@ function gsConnect($ip, $port) {
 
     $connector->createSocketForAddress($ip, $port)->then(function (React\Stream\Stream $stream) {
         echo 'Connected to the GS!' . PHP_EOL;
-
-        $result = new \MuServer\Protocol\Season097\ClientServer\LoginRequest('');
-        $result->setLogin('skpd');
-        $result->setPassword('qwe');
-        $result->setSerial('FIRSTPHPMUSERVER');
-        $result->setVersion('09700');
-        $result->setTick(round(substr(microtime(1), 4) * 10000));
-
-        $stream->write($result->buildPacket());
 
         $stream->on('data', function ($data, $connection) use ($stream) {
             if (ord($data[0]) == 0xC1) {
@@ -71,17 +63,48 @@ function gsConnect($ip, $port) {
                 $packet = \MuServer\Protocol\Season097\ServerClient\Factory::buildPacket($packet);
 
                 if ($packet instanceof \MuServer\Protocol\Season097\ServerClient\LoginResult) {
-                    $stream->write(new \MuServer\Protocol\Season097\ClientServer\CharListRequest());
+                    if ($packet->getResult() === \MuServer\Protocol\Season097\ServerClient\LoginResult::SUCCESS) {
+                        echo "Login OK. Getting char list...\n";
+                        $stream->write(new \MuServer\Protocol\Season097\ClientServer\CharListRequest());
+                    } else {
+                        switch ($packet->getResult()) {
+                            case \MuServer\Protocol\Season097\ServerClient\LoginResult::NEW_VERSION_REQUIRED:
+                                echo "New version is required!\n";
+                                break;
+                            default:
+                                var_dump($packet->getResult());
+                                break;
+                        }
+                        $stream->close();
+                    }
                 } else if ($packet instanceof \MuServer\Protocol\Season097\ServerClient\CharListCount) {
+                    var_dump($packet->getChars());
                     $result = new \MuServer\Protocol\Season097\ClientServer\MapJoinRequest('');
                     $result->setName('Skpd');
                     $stream->write($result);
-                }
+                } else if ($packet instanceof \MuServer\Protocol\Season097\ServerClient\JoinResult) {
+                    $result = new \MuServer\Protocol\Season097\ClientServer\LoginRequest('');
+                    $result->setLogin('dmskpd');
+                    $result->setPassword('yt3frjyyj');
+                    $result->setSerial('DarksTeam97d99i+');
+                    $result->setVersion('09704');
+//                    $result->setLogin('skpd');
+//                    $result->setPassword('qwe');
+//                    $result->setSerial('FIRSTPHPMUSERVER');
+//                    $result->setVersion('09700');
+                    $result->setTick(round(substr(microtime(1), 4) * 1000));
 
+                    $stream->write($result->buildPacket());
+                }
+//var_dump($packet);
                 if (!$stop) {
                     $stream->emit('data', [$next, $connection]);
                 }
             }
+        });
+
+        $stream->on('end', function () {
+            echo "Disconnected from GS!\n";
         });
     });
 
@@ -91,5 +114,6 @@ function gsConnect($ip, $port) {
 //csConnect('78.28.197.110', 44405);
 //csConnect('62.106.104.240', 44405);
 //csConnect('82.135.154.56', 44405);
-csConnect('127.0.0.1', 44405);
+//csConnect('127.0.0.1', 44405);
 //csConnect('192.168.1.105', 44405);
+csConnect('94.70.23.245', 44405);
