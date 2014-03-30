@@ -59,8 +59,13 @@ function gsConnect($ip, $port) {
                     $stop = true;
                 }
 
-                \MuServer\Protocol\Debug::dump($packet, 'Received: ');
-                $packet = \MuServer\Protocol\Season097\ServerClient\Factory::buildPacket($packet);
+                try {
+                    \MuServer\Protocol\Debug::dump($packet, 'Received: ');
+                    $packet = \MuServer\Protocol\Season097\ServerClient\Factory::buildPacket($packet);
+                } catch (\RuntimeException $e) {
+                    var_dump($e->getMessage(), $data);
+                    return;
+                }
 
                 if ($packet instanceof \MuServer\Protocol\Season097\ServerClient\LoginResult) {
                     if ($packet->getResult() === \MuServer\Protocol\Season097\ServerClient\LoginResult::SUCCESS) {
@@ -78,9 +83,14 @@ function gsConnect($ip, $port) {
                         $stream->close();
                     }
                 } else if ($packet instanceof \MuServer\Protocol\Season097\ServerClient\CharListCount) {
-                    var_dump($packet->getChars());
+                    echo "Chars: \n";
+                    foreach ($packet->getChars() as $char) {
+                        echo "{$char->getName()} [{$char->getLevel()}]\n";
+                    }
                     $result = new \MuServer\Protocol\Season097\ClientServer\MapJoinRequest('');
-                    $result->setName('Skpd');
+                    $result->setName(current($packet->getChars())->getName());
+                    echo "Selecting '{$result->getName()}'\n";
+                    sleep(1);
                     $stream->write($result);
                 } else if ($packet instanceof \MuServer\Protocol\Season097\ServerClient\JoinResult) {
                     $result = new \MuServer\Protocol\Season097\ClientServer\LoginRequest('');

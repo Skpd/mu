@@ -2,6 +2,8 @@
 
 namespace MuServer\Protocol\Season097\ClientServer;
 
+use MuServer\Security;
+
 class MapJoinRequest extends AbstractPacket
 {
     protected $class = 0xC1;
@@ -12,7 +14,7 @@ class MapJoinRequest extends AbstractPacket
 
     public function setData()
     {
-        $this->data = str_pad($this->name, 10, chr(0));
+        $this->data = Security::encodeName(str_pad($this->name, 10, chr(0)));
     }
 
     function __construct($rawData)

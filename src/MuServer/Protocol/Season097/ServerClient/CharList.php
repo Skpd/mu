@@ -69,7 +69,7 @@ class CharList extends AbstractPacket
         $character = new Character();
         $character->setIndex(ord($raw[0]));
         $character->setName(trim(substr($raw, 1, 10)));
-        $character->setLevel(current(unpack('v', substr($raw, 13, 2))));
+        $character->setLevel(current(unpack('v', substr($raw, 12, 2))));
         $character->setCode(ord($raw[14]));
         $character->setClass(ord($raw[15]));
 //        $character->set(substr($raw, 17));

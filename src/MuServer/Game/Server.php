@@ -4,6 +4,7 @@ namespace MuServer\Game;
 
 use Doctrine\ORM\EntityNotFoundException;
 use MuServer\Entity\Account;
+use MuServer\Protocol\Debug;
 use MuServer\Protocol\Season097\ClientServer\CharListRequest;
 use MuServer\Protocol\Season097\ClientServer\Factory;
 use MuServer\Protocol\Season097\ClientServer\LoginRequest;
@@ -109,10 +110,12 @@ class Server extends SocketServer implements ServiceLocatorAwareInterface
             $this->send($connection, $result);
         } elseif ($packet instanceof MapJoinRequest) {
             //TODO: unpack name and select right character
+            Debug::dump($data);
 
             /** @var Account $account */
             $account = $this->players->offsetGet($connection);
-            var_dump($packet->getName());
+
+            var_dump(Security::decodeName($packet->getName()));
 //            $result = new CharInfoResult(1, $packet->getName(), 1);
 //            $this->send($connection, $result);
 //
