@@ -1,3 +1,5 @@
 vendor/*
 ext/*.so
 ext/*.o
+.idea
+composer.lock

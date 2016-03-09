@@ -2,7 +2,6 @@
 
 namespace MuServer\Repository;
 
-use Doctrine\ORM\EntityNotFoundException;
 use Doctrine\ORM\EntityRepository;
 use Zend\Crypt\Password\Bcrypt;
 
@@ -14,7 +13,7 @@ class Account extends EntityRepository
         $account = current($this->findBy(['login' => $login]));
 
         if (empty($account)) {
-            throw new EntityNotFoundException;
+            throw new AccountNotFoundException;
         }
 
         if (!$this->getBCrypt()->verify($password, $account->getPassword())) {

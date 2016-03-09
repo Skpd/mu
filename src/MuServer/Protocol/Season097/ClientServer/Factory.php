@@ -33,13 +33,14 @@ class Factory
                     return new CharListRequest;
                 } elseif ($sub === 0x79) {
                     return new MapJoinRequest(substr($rawData, 4));
+                } elseif ($sub === 0x7B) {
+                    return new CreateCharacter(substr($rawData, 4));
                 }
             }
         }
 
         if ($class === 0xC3) {
             Debug::dump($rawData, 'To decode: ');
-            $rawData = array_map('ord', str_split($rawData));
             $rawData = mu_decode_c3($rawData, $class, $head, $sub);
 
             if ($head === 0xF1 && ($sub === 0x01 || $sub === 0xC1)) {

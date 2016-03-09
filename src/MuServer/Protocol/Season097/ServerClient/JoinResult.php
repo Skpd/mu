@@ -11,7 +11,7 @@ class JoinResult extends AbstractPacket
     private $isOk;
     private $version;
 
-    public function __construct($isOk = true, $version = '0.97.00')
+    public function __construct($isOk = true, $version = '0.95.04')
     {
         $this->isOk = $isOk;
         $this->version = str_split(preg_replace('/[^0-9]/', '', $version));

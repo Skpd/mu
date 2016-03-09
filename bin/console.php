@@ -11,6 +11,7 @@ $entityManager = $sm->get('orm_em');
 $cli = new Application('MuServer CLI', '0.1');
 
 $cli->setHelperSet(ConsoleRunner::createHelperSet($entityManager));
+$cli->getHelperSet()->set(new \Symfony\Component\Console\Helper\DialogHelper(), 'dialog');
 ConsoleRunner::addCommands($cli);
 
 $cli->addCommands(array(

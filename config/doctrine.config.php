@@ -8,9 +8,9 @@ use Doctrine\ORM\Mapping\Driver\XmlDriver;
 
 $dbParams = [
     'database'  => 'mu',
-    'username'  => 'skpd-home',
-    'password'  => '6775ecvMLtLe8NcV',
-    'hostname'  => '192.168.1.102',
+    'username'  => 'root',
+    'password'  => 'root123!',
+    'hostname'  => 'localhost',
 ];
 
 return [

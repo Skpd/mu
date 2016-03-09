@@ -4,6 +4,16 @@ namespace MuServer\Entity;
 
 class Character
 {
+    const CLASS_DW = 0;
+    const CLASS_DK = 32;
+    const CLASS_EE = 64;
+
+    const CLASS_MG = 96;
+
+    const CLASS_SM = 128;
+    const CLASS_BK = 160;
+    const CLASS_ME = 192;
+
     private $id;
     private $index;
     private $name;

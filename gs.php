@@ -1,5 +1,7 @@
 <?php
 
+mu_decoder_init("data/Enc2.dat", "data/Dec1.dat");
+
 require __DIR__ . '/vendor/autoload.php';
 
 use MuServer\Protocol\Season097\ClientServer\CharListRequest as CCharListRequest;

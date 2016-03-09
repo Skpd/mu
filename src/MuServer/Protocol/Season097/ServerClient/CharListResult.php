@@ -18,7 +18,11 @@ class CharListResult extends AbstractPacket
 
     public function setData()
     {
-        $this->data = str_pad($this->accountId, 10, chr(0)) . chr($this->connectionId);
+        $this->data = str_pad(
+                (string) $this->accountId,
+                10,
+                chr(0)
+            ) . chr((int) $this->connectionId);
     }
 
     public static function buildFrom($raw)

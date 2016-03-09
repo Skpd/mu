@@ -8,7 +8,7 @@ class Factory
 {
     public static function buildPacket($rawData)
     {
-        $class = ord($rawData[0]);
+        $class = @ord($rawData[0]);
 
         if ($class == 0xC1) {
             $head = ord($rawData[2]);

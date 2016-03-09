@@ -3,12 +3,12 @@
                   xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
                    https://raw.github.com/doctrine/doctrine2/master/doctrine-mapping.xsd">
 
-    <entity name="MuServer\Entity\Character" table="mu_characters">
+    <entity name="MuServer\Entity\Character" table="mu_characters" repository-class="MuServer\Repository\Character">
         <id name="id" type="integer" column="id">
             <generator strategy="AUTO"/>
         </id>
 
-        <field name="index" column="index" type="smallint" nullable="false" unique="true" />
+        <field name="index" column="position" type="smallint" nullable="false" unique="true" />
         <field name="name" column="name" type="string" length="10" nullable="false" unique="false" />
         <field name="level" column="level" type="smallint" nullable="false" unique="false" />
         <field name="code" column="code" type="smallint" nullable="false" unique="false" />

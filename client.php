@@ -3,6 +3,8 @@
 require __DIR__ . '/vendor/autoload.php';
 
 function csConnect($ip, $port) {
+    echo "Connecting to $ip:$port\n";
+
     $loop = React\EventLoop\Factory::create();
 
     $dnsResolverFactory = new React\Dns\Resolver\Factory();
@@ -12,6 +14,10 @@ function csConnect($ip, $port) {
 
     $connector->createSocketForAddress($ip, $port)->then(function (React\Stream\Stream $stream) {
         echo 'Connected to the CS!' . PHP_EOL;
+
+        $stream->write(new \MuServer\Protocol\Season097\ClientServer\ServerList());
+
+
         $stream->on('data', function ($data) use ($stream) {
             \MuServer\Protocol\Debug::dump($data, 'Received: ');
             $packet = \MuServer\Protocol\Season097\ServerClient\Factory::buildPacket($data);
@@ -126,4 +132,4 @@ function gsConnect($ip, $port) {
 //csConnect('82.135.154.56', 44405);
 //csConnect('127.0.0.1', 44405);
 //csConnect('192.168.1.105', 44405);
-csConnect('94.70.23.245', 44405);
+//csConnect('94.70.23.245', 44405);

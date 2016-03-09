@@ -6,6 +6,7 @@ use Doctrine\ORM\EntityNotFoundException;
 use MuServer\Entity\Account;
 use MuServer\Protocol\Debug;
 use MuServer\Protocol\Season097\ClientServer\CharListRequest;
+use MuServer\Protocol\Season097\ClientServer\CreateCharacter;
 use MuServer\Protocol\Season097\ClientServer\Factory;
 use MuServer\Protocol\Season097\ClientServer\LoginRequest;
 use MuServer\Protocol\Season097\ClientServer\MapJoinRequest;
@@ -20,6 +21,7 @@ use MuServer\Protocol\Season097\ServerClient\JoinPosition;
 use MuServer\Protocol\Season097\ServerClient\JoinResult;
 use MuServer\Protocol\Season097\ServerClient\LoginResult;
 use MuServer\Repository\Account as AccountRepository;
+use MuServer\Repository\Character as CharacterRepository;
 use MuServer\Repository\InvalidPasswordException;
 use MuServer\Security;
 use React\EventLoop\LoopInterface;
@@ -40,6 +42,8 @@ class Server extends SocketServer implements ServiceLocatorAwareInterface
 
     /** @var AccountRepository */
     private $accountRepository;
+    /** @var CharacterRepository */
+    private $characterRepository;
 
     public function __construct(LoopInterface $loop)
     {
@@ -52,6 +56,7 @@ class Server extends SocketServer implements ServiceLocatorAwareInterface
     public function init()
     {
         $this->accountRepository = $this->serviceLocator->get('orm_em')->getRepository('MuServer\Entity\Account');
+        $this->characterRepository = $this->serviceLocator->get('orm_em')->getRepository('MuServer\Entity\Character');
     }
 
     public function receive($data, ConnectionInterface $connection)
@@ -121,6 +126,14 @@ class Server extends SocketServer implements ServiceLocatorAwareInterface
 //
 //            $result = new JoinPosition($account->getCharacters()->first(), $this->clients->getHash($connection));
 //            $this->send($connection, $result);
+        } else if ($packet instanceof CreateCharacter) {
+            /** @var Account $account */
+            $account = $this->players->offsetGet($connection);
+
+            $character = $this->characterRepository->createCharacter($account, $packet->getName(), 0);
+
+            $result = new CharInfoResult(1, $character->getName(), $character->getIndex());
+            $this->send($connection, $result);
         }
 
 //        $this->serviceLocator->get('orm_em')->clear();

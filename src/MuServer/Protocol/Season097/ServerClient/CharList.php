@@ -6,16 +6,6 @@ use MuServer\Entity\Character;
 
 class CharList extends AbstractPacket
 {
-    const CLASS_DW = 0;
-    const CLASS_DK = 32;
-    const CLASS_EE = 64;
-
-    const CLASS_MG = 96;
-
-    const CLASS_SM = 128;
-    const CLASS_BK = 160;
-    const CLASS_ME = 192;
-
     /** char */
     private $index = 0;
     /** char[10] */
@@ -27,7 +17,7 @@ class CharList extends AbstractPacket
     /** char[10] */
     private $set = '';
     /** char */
-    private $charClass = self::CLASS_BK;
+    private $charClass = Character::CLASS_DK;
 
     public function __construct(Character $character)
     {

@@ -13,7 +13,7 @@ function h2a($str)
 }
 
 
-$mver = '0.97.00'; // server version
+$mver = '0.95.04'; // server version
 
 
 $mver_split = addcslashes("$mver",'0..9.');

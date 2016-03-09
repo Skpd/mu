@@ -1,6 +1,8 @@
 <?php
 namespace MuServer;
 
+mu_decoder_init("data/Enc2.dat", "data/Dec1.dat");
+
 require __DIR__ . '/vendor/autoload.php';
 
 use MuServer\Protocol\Season097\ServerClient\ServerList as SServerList;
@@ -24,11 +26,7 @@ $socket->on('connection', function ($stream) use ($clients) {
     $serverList = new SServerlist;
 
     $server = new Server(0, 0);
-    $server->setIp('192.168.1.101');
-    $serverList->addServer($server);
-
-    $server = new Server(0, 1);
-    $server->setIp('192.168.1.105');
+    $server->setIp('127.0.0.1');
     $serverList->addServer($server);
 
     $stream->on('data', function ($data) use ($clients, $stream, $serverList) {
