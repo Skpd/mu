@@ -42,20 +42,20 @@ class Factory
         if ($class === 0xC3) {
             Debug::dump($rawData, 'To decode: ');
             $rawData = mu_decode_c3($rawData, $class, $head, $sub);
+            Debug::dump($rawData, 'Decoded: ');
 
             if ($head === 0xF1 && ($sub === 0x01 || $sub === 0xC1)) {
                 return new LoginRequest(substr($rawData, 3));
             }
 
             if ($head === 0xF1 && $sub === 0x03) {
-                return new CheckSum(substr($rawData, 3));
+                return new ClientClose(substr($rawData, 4));
+//                return new CheckSum(substr($rawData, 3));
             }
 
             if ($head === 0x0E) {
                 return new Ping(substr($rawData, 3));
             }
-
-            Debug::dump($rawData, 'Decoded: ');
         }
 
         throw new \RuntimeException("Unexpected packet '" . Debug::dump($rawData, null, true) . "'");

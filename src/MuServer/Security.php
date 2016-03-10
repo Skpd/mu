@@ -14,7 +14,7 @@ class Security
             if ($i > 0) {
                 $result .= chr(ord($name[$i]) ^ self::$loginKey[$i] ^ ord($name[$i - 1]));
             } else {
-                $result .= chr((ord($name[$i]) ^ self::$loginKey[$i]) - 2);
+                $result .= chr((ord($name[$i]) ^ self::$loginKey[$i]));
             }
         }
 
@@ -24,7 +24,11 @@ class Security
     public static function encodeName($name)
     {
         for ($i = 0; $i < strlen($name); $i++) {
-            $name[$i] = chr(ord($name[$i]) ^ self::$loginKey[$i] ^ ord($name[$i - 1]));
+            if ($i == 0) {
+                $name[$i] = chr(ord($name[$i]) ^ self::$loginKey[$i]);
+            } else {
+                $name[$i] = chr(ord($name[$i]) ^ self::$loginKey[$i] ^ ord($name[$i - 1]));
+            }
         }
 
         return trim($name);

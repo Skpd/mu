@@ -6,6 +6,7 @@ use Doctrine\ORM\EntityNotFoundException;
 use MuServer\Entity\Account;
 use MuServer\Protocol\Debug;
 use MuServer\Protocol\Season097\ClientServer\CharListRequest;
+use MuServer\Protocol\Season097\ClientServer\ClientClose;
 use MuServer\Protocol\Season097\ClientServer\CreateCharacter;
 use MuServer\Protocol\Season097\ClientServer\Factory;
 use MuServer\Protocol\Season097\ClientServer\LoginRequest;
@@ -61,6 +62,8 @@ class Server extends SocketServer implements ServiceLocatorAwareInterface
 
     public function receive($data, ConnectionInterface $connection)
     {
+        Debug::dump($data, 'Received: ');
+
         try {
             $packet = Factory::buildPacket($data);
         } catch (\RuntimeException $e) {
@@ -115,17 +118,16 @@ class Server extends SocketServer implements ServiceLocatorAwareInterface
             $this->send($connection, $result);
         } elseif ($packet instanceof MapJoinRequest) {
             //TODO: unpack name and select right character
-            Debug::dump($data);
-
             /** @var Account $account */
             $account = $this->players->offsetGet($connection);
 
             var_dump(Security::decodeName($packet->getName()));
-//            $result = new CharInfoResult(1, $packet->getName(), 1);
-//            $this->send($connection, $result);
-//
-//            $result = new JoinPosition($account->getCharacters()->first(), $this->clients->getHash($connection));
-//            $this->send($connection, $result);
+
+            $result = new CharInfoResult(1, $packet->getName(), 1);
+            $this->send($connection, $result);
+
+            $result = new JoinPosition($account->getCharacters()->first(), $this->clients->getHash($connection));
+            $this->send($connection, $result);
         } else if ($packet instanceof CreateCharacter) {
             /** @var Account $account */
             $account = $this->players->offsetGet($connection);
@@ -134,6 +136,9 @@ class Server extends SocketServer implements ServiceLocatorAwareInterface
 
             $result = new CharInfoResult(1, $character->getName(), $character->getIndex());
             $this->send($connection, $result);
+        } else if ($packet instanceof ClientClose) {
+            echo "Disconnected [{$connection->getRemoteAddress()}]: client close flag '{$packet->getFlag()}'\n";
+            $connection->close();
         }
 
 //        $this->serviceLocator->get('orm_em')->clear();
@@ -158,6 +163,7 @@ class Server extends SocketServer implements ServiceLocatorAwareInterface
 
     public function send(ConnectionInterface $connection, SCPacket $packet)
     {
+        echo 'Sent ' . get_class($packet) . PHP_EOL;
         $connection->write($packet->buildPacket());
     }
 

@@ -41,8 +41,6 @@ abstract class AbstractPacket
             } else {
                 $packet[1] = pack("c", strlen($packet) & 0xFF);
             }
-
-            Debug::dump($packet);
         } else {
             $packet = pack("a*", $this->data);
         }

@@ -37,8 +37,6 @@ abstract class AbstractPacket
             $packet = mu_encode_c3($packet, $this->code, $this->subCode + 1);
         }
 
-        Debug::dump($packet, 'Sent: ');
-
         return $packet;
     }
 
