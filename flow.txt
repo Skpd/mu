@@ -1,0 +1,101 @@
+Flow: GS <-> Client
+
+Actions:
+    join GS
+    login
+    select first char
+    enter the game
+    wait 1-3 sec
+    exit game
+    wait 5 sec
+    close client
+
+SC c1 0c f100 0112 f830 3937 3034
+    join result:
+        success
+        unknown
+        48th login attempt
+        09704 version
+
+CS c344 adf8 00fa 8e3c 5010 eca7 9283 3e6f 515e 1792 c614 dde8 e41d 77df 0c18 a099 7194 a146 9f2c 82c4 e543 48b0 2e1b 0876 280b ad38 417c 10c8 fd6c a406 041e 7fe0 3db5 86b3
+    decoded: c1 31 f1 01 73 6b 70 64 00 00 00 00 00 00 71 77 65 00 00 00 00 00 00 00 a0 19 1f 7f 30 39 37 30 34 44 61 72 6b 73 54 65 61 6d 39 37 64 39 39 69 2b
+    login request:
+        login: skpd
+        pwd: qwe
+        version: 09704
+        serial: DarksTeam97d99i+
+        tick: a0 19 1f 7f int32 LE? 2132744608
+
+SC c1 05 f101 01
+    login result:
+        success
+
+CS c318 8f9c 12d2 5869 21b1 c115 20a7 c976 ebaa 48b1 0e30 b688
+    decoded: c1 0c 0e 00 c8 19 1f 7f 00 00 00 00
+
+CS c1 04 f37a
+    char list request
+
+SC c1 39 f300 0200 536b 7064 0000 0000 0000 00b8 0008 60a6 a5f2 55fd 0208 0088 0101 5465 7374 3100 0000 0000 0022 0000 0020 ff2f ffff 0000 0078 00
+    char list count:
+        TBD
+
+SC c1 2d 0d01 596f 7520 6172 6520 636f 6e6e 6563 7469 6e67 2074 6f20 7468 6520 6761 6d65 2066 6f72 2046 5245 452e 00
+    message:
+        TBD
+
+SC c1 21 0d01 506f 7765 7265 6420 6279 2077 7777 2e44 6172 6b73 5465 616d 2e4e 4554 00
+    message:
+        TBD
+
+CS c1 0e f379 964f a0b7 943c c274 3d60
+    MapJoinRequest:
+        name TBD
+
+SC c1 07 26fe 2801 00
+SC c1 08 27fe 2966 11ad
+SC c1 04 0f17
+SC c1 05 0b00 03
+SC c1 06 0300 0e5e
+
+SC c3 4f 7f 9e08 62cf 12b1 fb9d 685d ca80 396c 8a2a 2217 d8f5 c0b0 1721 7a8b c391 681e ac99 9026 192f 13ff 8245 aeb3 86e7 dc2c da4d 0da2 0a2a e0d5 f98b 387a 0e80 a249 faa5 90cb 2a2e ab5b dc02 d479 b08e
+    decoded: c1 34 f3 79 4e 6f bb 7b a3 37 34 60 ca d7 d6 bb 14 40 fd 16 15 82 b0 c4 58 2a 9d ea 26 78 9d 1d 97 22 c5 57 19 0e f6 0e 3d a8 30 0f 26 56 89 ba f3 ed 7d c8
+
+SC c4 0092 b9 190b 7557 9596 b66e ccf9 0be0 146b 4c6f 27ad 9938 0dee 0807 bc05 4283 f642 bd88 c3fe 3dee 9b22 8321 9ecf fa29 0b22 ca41 3600 5c68 bc89 fe06 2e17 c1be e631 da05 3025 7313 f903 2364 8fbc 4174 bfa5 1094 40cd 83b0 100f 3af0 931f 6409 9621 73b1 5b6e ef7e 3d98 14bf 73d2 c459 6c15 866b 8444 3402 9150 5366 3466 288f 52be 11cb e941 747b c50c d312 ec53 6581 fdc8
+SC c1 1d f311 0800 0901 0107 0702 0202 0303 0304 0a02 0505 0506 0800 0701 01
+SC c1 13 f330 0009 0a01 0503 0000 0000 0900 0408 cf
+
+CS c3 0d f029 73bb 911e e023 bc72 48
+    decoded: c1 08 03 00 43 9a e1 ed
+
+SC c1 21 0d00 506f 7765 7265 6420 6279 2077 7777 2e44 6172 6b73 5465 616d 2e4e 4554 00
+SC c1 22 0d01 596f 7520 6861 7665 2061 2071 7565 7374 2069 6e20 7072 6f67 7265 7373 2e00 c118 0d00 536b 7064 2068 6173 206c 6f67 6765 6420 696e 2100
+
+SC c1 06 f322 0000
+    exit 5?
+
+SC c1 04 0f14
+CS c1 12 f34a f64d d8aa 8c27 d96f 267b 4b16 985b
+
+CS c3 0d 7490 6279 e2c1 5365 a974 4d
+    decoded: c1 05 f1 02 00
+
+CS c1 05 1897 4d
+
+SC c1 06 f322 0000
+    exit 4?
+
+SC c1 08 27ff 17e5 0962
+
+SC c1 06 f322 0000
+    exit 3?
+
+SC c1 06 f322 0000
+    exit 2?
+
+SC c1 08 27ff 196d 09ee
+
+SC c1 06 f322 0000
+    exit 1?
+
+END
