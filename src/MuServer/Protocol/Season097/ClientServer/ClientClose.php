@@ -6,7 +6,7 @@ class ClientClose extends AbstractPacket
 {
     protected $class = 0xC1;
     protected $code = 0xF1;
-    protected $subCode = 0x03;
+    protected $subCode = 0x02;
 
     private $flag = 0x00;
 

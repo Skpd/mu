@@ -13,7 +13,7 @@ function h2a($str)
 }
 
 
-$mver = '0.95.04'; // server version
+$mver = '0.97.04'; // server version
 
 
 $mver_split = addcslashes("$mver",'0..9.');
@@ -27,4 +27,4 @@ $h .= dechex(hexdec($base)+hexdec($n[7])+hexdec(5));
 $mumv = h2a($h);
 
 
-echo "Hex: [".$h."] - Ascii: [".$mumv."]";
+echo "Hex: [".$h."] - Ascii: [".$mumv."]\n";

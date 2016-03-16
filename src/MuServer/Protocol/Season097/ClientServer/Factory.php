@@ -3,6 +3,7 @@
 namespace MuServer\Protocol\Season097\ClientServer;
 
 use MuServer\Protocol\Debug;
+use MuServer\Security;
 
 class Factory
 {
@@ -17,6 +18,7 @@ class Factory
         $head  = $sub = 0;
 
         if ($class === 0xC1) {
+            Security::extract($rawData);
             $head = ord($rawData[2]);
             $sub  = ord($rawData[3]);
 
@@ -29,28 +31,38 @@ class Factory
             }
 
             if ($head === 0xF3) {
-                if ($sub === 0x7A) {
+                if ($sub === 0x00) {
                     return new CharListRequest;
-                } elseif ($sub === 0x79) {
+                } elseif ($sub === 0x03) {
                     return new MapJoinRequest(substr($rawData, 4));
-                } elseif ($sub === 0x7B) {
+                } elseif ($sub === 0x01) {
                     return new CreateCharacter(substr($rawData, 4));
+                } elseif ($sub === 0x02) {
+                    return new DeleteCharacter(substr($rawData, 4));
+                }
+            }
+
+            if ($head === 0xF1) {
+                if ($sub === 0x02) {
+                    return new ClientClose(substr($rawData, 4));
                 }
             }
         }
 
         if ($class === 0xC3) {
-            Debug::dump($rawData, 'To decode: ');
             $rawData = mu_decode_c3($rawData, $class, $head, $sub);
             Debug::dump($rawData, 'Decoded: ');
-
-            if ($head === 0xF1 && ($sub === 0x01 || $sub === 0xC1)) {
-                return new LoginRequest(substr($rawData, 3));
+            if (($head === 0xF1 || $head === 0xFA) && ($sub === 0x01 || $sub === 0x00)) {
+                return new LoginRequest(substr($rawData, 4));
             }
 
             if ($head === 0xF1 && $sub === 0x03) {
                 return new ClientClose(substr($rawData, 4));
-//                return new CheckSum(substr($rawData, 3));
+//                return new CheckSum(substr($rawData, 4));
+            }
+
+            if ($head === 0x03 && $sub == 0x00) {
+                return new CheckSum(substr($rawData, 4));
             }
 
             if ($head === 0x0E) {

@@ -19,7 +19,7 @@ class Account
     }
 
     /**
-     * @return Character[]
+     * @return Character[]|ArrayCollection
      */
     public function getCharacters()
     {

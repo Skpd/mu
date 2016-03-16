@@ -8,7 +8,7 @@ class MapJoinRequest extends AbstractPacket
 {
     protected $class = 0xC1;
     protected $code = 0xF3;
-    protected $subCode = 0x79;
+    protected $subCode = 0x03;
 
     private $name;
 

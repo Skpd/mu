@@ -29,12 +29,11 @@ abstract class AbstractPacket
         $packet[1] = pack("c", strlen($packet) & 0xFF);
 
         if ($this->class === 0xC3) {
-            $packet = array_map('hexdec', array_map('bin2hex', str_split($this->data)));
-            array_unshift($packet, 0, 0, 0);
-            $packet[0] = 0xC3;
-            $packet[1] = strlen($this->data) + 5;
-            $packet[2] = $this->code;
-            $packet = mu_encode_c3($packet, $this->code, $this->subCode + 1);
+            Debug::dump($packet, 'before');
+            var_dump($this->code, $this->subCode);
+            $packet = mu_encode_c3($packet, $this->code, $this->subCode);
+            Debug::dump($packet, 'after');
+            var_dump($this->code, $this->subCode);
         }
 
         return $packet;

@@ -26,21 +26,21 @@ class CharList extends AbstractPacket
         $this->setControlCode($character->getCode());
         $this->setLevel($character->getLevel());
         $this->setName($character->getName());
-        $this->setSet(
-            chr(0xFF)   // right arm (weapon)
+        $this->setSet(''
+            . chr(0xFF)   // right arm (weapon)
             . chr(0xFF)   // left arm (weapon / shield)
 
-            . chr(0xFF)   // helm and armor type
-            . chr(0xFF)   // gloves and pants type
-            . chr(0xFF)   // boots and wings type
+            . chr(0xF0 | 0x0F)   // helm and armor type
+            . chr(0xF0 | 0x0F)   // gloves and pants type
+            . chr(0xF0 | 0x0C | 0x03)   // boots, wings and pet type
 
-            . chr(0x00)   // boots and gloves level
-            . chr(0x00)   // pants armor helm gloves level
+            . chr(0x00 | 0x00)   // boots and gloves level
+            . chr(0x00 | 0x00)   // pants armor helm gloves level
             . chr(0x00)   // helm level
 
-            . chr(0xF8)   // 2nd wings ?
+            . chr(0x80 | 0x40 | 0x20 | 0x10 | 0x08)   // 2nd wings ? mg set ?! dino ? wtf?!
 
-            . chr(0xFE)   // is exc ? 1 << 1 | 1 << 2 ... 1 << 7
+            . chr(0x00)   // is exc ? 1 << 1 | 1 << 2 ... 1 << 7 ... wtf?!
         );
     }
 
@@ -51,7 +51,7 @@ class CharList extends AbstractPacket
         $this->data .= pack('v1', $this->level); // [13]
         $this->data .= chr($this->controlCode); // [14]
         $this->data .= chr($this->charClass); // [15]
-        $this->data .= str_pad($this->set, 10, chr(-1)); // [22] - [25]
+        $this->data .= str_pad($this->set, 10, chr(0xFF)); // [22] - [25]
     }
 
     public static function buildFrom($raw)

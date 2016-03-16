@@ -3,13 +3,14 @@
 namespace MuServer\Protocol\Season097\ClientServer;
 
 use MuServer\Entity\Character;
+use MuServer\Protocol\Debug;
 use MuServer\Security;
 
 class CreateCharacter extends AbstractPacket
 {
     protected $class = 0xC1;
     protected $code = 0xF3;
-    protected $subCode = 0x7B;
+    protected $subCode = 0x01;
 
     private $name;
     private $charClass;
@@ -24,23 +25,24 @@ class CreateCharacter extends AbstractPacket
     {
         $this->data = $rawData;
 
-        $this->name = Security::decodeName(substr($rawData, 0, 11));
-        $charClass  = ord(substr($this->name, -1, 1));
-        $this->name = trim(substr($this->name, 0, -1));
-
-        var_dump($charClass, dechex($charClass));
+        $this->name = trim(substr($rawData, 0, 10));
+        $charClass  = ord($rawData[10]);
 
         switch ($charClass) {
-            case 0x19:
-                $this->charClass = Character::CLASS_EE;
+            case 0x00:
+                $this->charClass = Character::CLASS_DW;
                 break;
 
-            case 0x29:
+            case 0x10:
                 $this->charClass = Character::CLASS_DK;
                 break;
 
-            case 0x39:
-                $this->charClass = Character::CLASS_DW;
+            case 0x20:
+                $this->charClass = Character::CLASS_EE;
+                break;
+
+            case 0x30:
+                $this->charClass = Character::CLASS_MG;
                 break;
 
             default:

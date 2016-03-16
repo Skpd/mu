@@ -16,11 +16,6 @@ class CheckSumResult extends AbstractPacket
 
     public function setData()
     {
-        $this->data[] = chr(0);
-        $this->data[] = chr(0);
-        $this->data[] = chr(0);
-        $this->data[] = chr(1);
-
-        $this->data = implode($this->data);
+        $this->data = pack('v', $this->key);
     }
 }

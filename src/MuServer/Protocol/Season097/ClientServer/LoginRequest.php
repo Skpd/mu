@@ -5,8 +5,8 @@ namespace MuServer\Protocol\Season097\ClientServer;
 class LoginRequest extends AbstractPacket
 {
     protected $class = 0xC3;
-    protected $code = 0xF1;
-    protected $subCode = 0x00;
+    protected $code = 0xFA;
+    protected $subCode = 0x01;
 
     private $login;
     private $password;
@@ -18,20 +18,22 @@ class LoginRequest extends AbstractPacket
     {
         $this->data = str_pad($this->login, 10, chr(0));
         $this->data .= str_pad($this->password, 10, chr(0));
-        $this->data .= pack('N', $this->tick);
+        $this->data .= pack('V', $this->tick);
         $this->data .= $this->version;
         $this->data .= $this->serial;
     }
 
-    function __construct($rawData)
+    function __construct($rawData = '', $autoBuild = true)
     {
         $this->data = $rawData;
 
-        $this->login = trim(substr($rawData, 0, 10));
-        $this->password = trim(substr($rawData, 10, 10));
-        $this->tick = hexdec(bin2hex(substr($rawData, 20, 4)));
-        $this->version = substr($rawData, 24, 5);
-        $this->serial = substr($rawData, 29);
+        if ($autoBuild) {
+            $this->login = trim(substr($rawData, 0, 10));
+            $this->password = trim(substr($rawData, 10, 10));
+            $this->tick = unpack('V', substr($rawData, 20, 4))[1];
+            $this->version = substr($rawData, 24, 5);
+            $this->serial = substr($rawData, 29);
+        }
     }
 
     /**

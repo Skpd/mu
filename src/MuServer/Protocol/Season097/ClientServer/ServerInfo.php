@@ -15,10 +15,12 @@ class ServerInfo extends AbstractPacket
         $this->data = chr($this->serverCode);
     }
 
-    function __construct($rawData)
+    function __construct($rawData = '', $autoBuild = true)
     {
-        $this->serverCode = ord($rawData[0]);
-        $this->data = $rawData;
+        if ($autoBuild) {
+            $this->serverCode = ord($rawData[0]);
+            $this->data = $rawData;
+        }
     }
 
     public function getServerCode()

@@ -3,6 +3,7 @@
 namespace MuServer\Protocol\Season097\ServerClient;
 
 use MuServer\Protocol\Debug;
+use MuServer\Security;
 
 abstract class AbstractPacket
 {
@@ -43,6 +44,11 @@ abstract class AbstractPacket
             }
         } else {
             $packet = pack("a*", $this->data);
+        }
+
+        if ($this->class === 0xC3) {
+            $packet = mu_encode_c3($packet);
+            Debug::dump($packet, 'Encoded: ');
         }
 
         return $packet;

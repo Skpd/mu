@@ -25,4 +25,13 @@ class Character extends EntityRepository
 
         return $character;
     }
+
+    public function deleteCharacter(CharacterEntity $character)
+    {
+        $account = $character->getAccount();
+
+        $this->getEntityManager()->remove($character);
+        $this->getEntityManager()->flush($character);
+        $this->getEntityManager()->refresh($account);
+    }
 }

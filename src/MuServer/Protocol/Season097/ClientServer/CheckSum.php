@@ -20,4 +20,20 @@ class CheckSum extends AbstractPacket
 
         $this->key = hexdec(bin2hex($rawData));
     }
+
+    /**
+     * @return number
+     */
+    public function getKey()
+    {
+        return $this->key;
+    }
+
+    /**
+     * @param number $key
+     */
+    public function setKey($key)
+    {
+        $this->key = $key;
+    }
 }
