@@ -6,7 +6,7 @@ class Hp extends AbstractPacket
 {
     protected $class = 0xC1;
     protected $code = 0x26;
-    protected $subCode = 0xFE;
+    protected $subCode = 0xFF;
 
     private $hp = 0;
 
@@ -17,12 +17,12 @@ class Hp extends AbstractPacket
 
     public function setData()
     {
-        $this->data = pack('v', $this->hp) . chr(0x00);
+        $this->data = pack('n', $this->hp) . chr(0x00);
     }
 
     public static function buildFrom($raw)
     {
-        return new self(unpack('v', $raw)[1]);
+        return new self(unpack('n', $raw)[1]);
     }
 
     /**

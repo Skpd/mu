@@ -6,7 +6,7 @@ class Mana extends AbstractPacket
 {
     protected $class = 0xC1;
     protected $code = 0x27;
-    protected $subCode = 0xFE;
+    protected $subCode = 0xFF;
 
     private $mana = 0;
 
@@ -17,12 +17,12 @@ class Mana extends AbstractPacket
 
     public function setData()
     {
-        $this->data = pack('v', $this->mana);
+        $this->data = pack('n', $this->mana) . chr(0x00);
     }
 
     public static function buildFrom($raw)
     {
-        return new self(unpack('v', $raw)[1]);
+        return new self(unpack('n', $raw)[1]);
     }
 
     /**
