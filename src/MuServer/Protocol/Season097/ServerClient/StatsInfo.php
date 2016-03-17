@@ -3,7 +3,6 @@
 namespace MuServer\Protocol\Season097\ServerClient;
 
 use MuServer\Entity\Character;
-use MuServer\Security;
 
 class StatsInfo extends AbstractPacket
 {
@@ -15,8 +14,8 @@ class StatsInfo extends AbstractPacket
     private $y = 0x77;
     private $mapNumber = 0;
     private $direction = 0;
-    private $exp = 1;
-    private $nextLevelAt = 10;
+    private $exp = 33;
+    private $nextLevelAt = 100;
     private $freePoints = 1000;
     private $str = 1;
     private $agi = 1;
@@ -27,7 +26,7 @@ class StatsInfo extends AbstractPacket
     private $mana = 1;
     private $maxMana = 1000;
     private $money = 31337;
-    private $pkStatus = 0;
+    private $pkStatus = 0x03;
     private $ctlCode = 0x00;
 
     public function __construct(Character $character = null)
@@ -60,11 +59,15 @@ class StatsInfo extends AbstractPacket
         $this->data .= pack('v', $this->maxLife);
         $this->data .= pack('v', $this->mana);
         $this->data .= pack('v', $this->maxMana);
+
+        //not sure about these two
+        $this->data .= chr(0x00);
+        $this->data .= chr(0x00);
+
         $this->data .= pack('V', $this->money);
+
         $this->data .= chr($this->pkStatus);
         $this->data .= chr($this->ctlCode);
-        $this->data .= pack('c*', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-//        Security::pack($this->data);
     }
 
     /**
