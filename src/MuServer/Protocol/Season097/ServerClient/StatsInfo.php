@@ -39,6 +39,9 @@ class StatsInfo extends AbstractPacket
         $this->agi = $character->getAgility();
         $this->vit = $character->getVitality();
         $this->ene = $character->getEnergy();
+        $this->money = $character->getZen();
+        $this->ctlCode = $character->getCode();
+        $this->pkStatus = $character->getPk();
     }
 
     public function setData()

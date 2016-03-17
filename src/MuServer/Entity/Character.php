@@ -28,9 +28,43 @@ class Character
     private $agility;
     private $vitality;
     private $energy;
+    private $zen;
+    private $pk;
     private $inventoryItems;
 
     private $account;
+
+    /**
+     * @return mixed
+     */
+    public function getPk()
+    {
+        return $this->pk;
+    }
+
+    /**
+     * @param mixed $pk
+     */
+    public function setPk($pk)
+    {
+        $this->pk = $pk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getZen()
+    {
+        return $this->zen;
+    }
+
+    /**
+     * @param mixed $zen
+     */
+    public function setZen($zen)
+    {
+        $this->zen = $zen;
+    }
 
     /**
      * @return mixed

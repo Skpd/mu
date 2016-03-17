@@ -71,6 +71,19 @@
             </options>
         </field>
 
+        <field name="zen" column="zen" type="integer" nullable="false" unique="false">
+            <options>
+                <option name="unsigned">true</option>
+            </options>
+        </field>
+
+        <field name="pk" column="pk" type="smallint" nullable="false" unique="false">
+            <options>
+                <option name="unsigned">true</option>
+                <option name="default">3</option>
+            </options>
+        </field>
+
         <many-to-many field="inventoryItems" target-entity="MuServer\Entity\Item">
             <join-table name="mu_character_inventory_items">
                 <join-columns>
