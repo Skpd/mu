@@ -17,22 +17,29 @@ class StatsInfo extends AbstractPacket
     private $direction = 0;
     private $exp = 1;
     private $nextLevelAt = 10;
-    private $freePoints = 10;
+    private $freePoints = 1000;
     private $str = 1;
     private $agi = 1;
     private $vit = 1;
     private $ene = 1;
     private $life = 1;
-    private $maxLife = 10;
+    private $maxLife = 1000;
     private $mana = 1;
-    private $maxMana = 10;
+    private $maxMana = 1000;
     private $money = 31337;
     private $pkStatus = 0;
-    private $ctlCode = 0x03;
+    private $ctlCode = 0x00;
 
     public function __construct(Character $character = null)
     {
-
+        $this->mana = $character->getMana();
+        $this->maxMana = $character->getMaxMana();
+        $this->life = $character->getLife();
+        $this->maxLife = $character->getMaxLife();
+        $this->str = $character->getStrength();
+        $this->agi = $character->getAgility();
+        $this->vit = $character->getVitality();
+        $this->ene = $character->getEnergy();
     }
 
     public function setData()

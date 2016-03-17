@@ -39,6 +39,8 @@ class Factory
                     return new CreateCharacter(substr($rawData, 4));
                 } elseif ($sub === 0x02) {
                     return new DeleteCharacter(substr($rawData, 4));
+                } elseif ($sub === 0x06) {
+                    return new AddPoint(substr($rawData, 4));
                 }
             }
 
