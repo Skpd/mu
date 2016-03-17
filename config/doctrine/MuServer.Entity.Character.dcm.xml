@@ -8,11 +8,68 @@
             <generator strategy="AUTO"/>
         </id>
 
-        <field name="index" column="position" type="smallint" nullable="false" unique="true" />
+        <field name="index" column="position" type="smallint" nullable="false" unique="false">
+            <options>
+                <option name="unsigned">true</option>
+            </options>
+        </field>
         <field name="name" column="name" type="string" length="10" nullable="false" unique="false" />
-        <field name="level" column="level" type="smallint" nullable="false" unique="false" />
-        <field name="code" column="code" type="smallint" nullable="false" unique="false" />
-        <field name="class" column="class" type="smallint" nullable="false" unique="false" />
+        <field name="level" column="level" type="smallint" nullable="false" unique="false">
+            <options>
+                <option name="unsigned">true</option>
+            </options>
+        </field>
+        <field name="code" column="code" type="smallint" nullable="false" unique="false">
+            <options>
+                <option name="unsigned">true</option>
+            </options>
+        </field>
+        <field name="class" column="class" type="smallint" nullable="false" unique="false">
+            <options>
+                <option name="unsigned">true</option>
+            </options>
+        </field>
+        <field name="life" column="life" type="smallint" nullable="false" unique="false">
+            <options>
+                <option name="unsigned">true</option>
+            </options>
+        </field>
+        <field name="maxLife" column="maxLife" type="smallint" nullable="false" unique="false">
+            <options>
+                <option name="unsigned">true</option>
+            </options>
+        </field>
+        <field name="mana" column="mana" type="smallint" nullable="false" unique="false">
+            <options>
+                <option name="unsigned">true</option>
+            </options>
+        </field>
+        <field name="maxMana" column="maxMana" type="smallint" nullable="false" unique="false">
+            <options>
+                <option name="unsigned">true</option>
+            </options>
+        </field>
+
+        <field name="strength" column="strength" type="smallint" nullable="false" unique="false">
+            <options>
+                <option name="unsigned">true</option>
+            </options>
+        </field>
+        <field name="agility" column="agility" type="smallint" nullable="false" unique="false">
+            <options>
+                <option name="unsigned">true</option>
+            </options>
+        </field>
+        <field name="vitality" column="vitality" type="smallint" nullable="false" unique="false">
+            <options>
+                <option name="unsigned">true</option>
+            </options>
+        </field>
+        <field name="energy" column="energy" type="smallint" nullable="false" unique="false">
+            <options>
+                <option name="unsigned">true</option>
+            </options>
+        </field>
 
         <many-to-many field="inventoryItems" target-entity="MuServer\Entity\Item">
             <join-table name="mu_character_inventory_items">

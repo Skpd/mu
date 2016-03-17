@@ -20,9 +20,81 @@ class Character
     private $level;
     private $code;
     private $class;
+    private $life;
+    private $maxLife;
+    private $mana;
+    private $maxMana;
+    private $strength;
+    private $agility;
+    private $vitality;
+    private $energy;
     private $inventoryItems;
 
     private $account;
+
+    /**
+     * @return mixed
+     */
+    public function getStrength()
+    {
+        return $this->strength;
+    }
+
+    /**
+     * @param mixed $strength
+     */
+    public function setStrength($strength)
+    {
+        $this->strength = $strength;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAgility()
+    {
+        return $this->agility;
+    }
+
+    /**
+     * @param mixed $agility
+     */
+    public function setAgility($agility)
+    {
+        $this->agility = $agility;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVitality()
+    {
+        return $this->vitality;
+    }
+
+    /**
+     * @param mixed $vitality
+     */
+    public function setVitality($vitality)
+    {
+        $this->vitality = $vitality;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEnergy()
+    {
+        return $this->energy;
+    }
+
+    /**
+     * @param mixed $energy
+     */
+    public function setEnergy($energy)
+    {
+        $this->energy = $energy;
+    }
 
     /**
      * @return Account
@@ -150,5 +222,69 @@ class Character
     public function setName($name)
     {
         $this->name = $name;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLife()
+    {
+        return $this->life;
+    }
+
+    /**
+     * @param mixed $life
+     */
+    public function setLife($life)
+    {
+        $this->life = $life;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMaxLife()
+    {
+        return $this->maxLife;
+    }
+
+    /**
+     * @param mixed $maxLife
+     */
+    public function setMaxLife($maxLife)
+    {
+        $this->maxLife = $maxLife;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMana()
+    {
+        return $this->mana;
+    }
+
+    /**
+     * @param mixed $mana
+     */
+    public function setMana($mana)
+    {
+        $this->mana = $mana;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMaxMana()
+    {
+        return $this->maxMana;
+    }
+
+    /**
+     * @param mixed $maxMana
+     */
+    public function setMaxMana($maxMana)
+    {
+        $this->maxMana = $maxMana;
     }
 }
