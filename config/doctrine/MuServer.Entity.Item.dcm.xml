@@ -7,6 +7,143 @@
         <id name="id" type="integer" column="id">
             <generator strategy="AUTO"/>
         </id>
+
+        <field name="type" column="type" type="smallint" nullable="false" unique="false">
+            <options>
+                <option name="unsigned">true</option>
+            </options>
+        </field>
+        <field name="index" column="index" type="smallint" nullable="false" unique="false">
+            <options>
+                <option name="unsigned">true</option>
+            </options>
+        </field>
+        <field name="name" column="name" type="string" nullable="false" unique="true"/>
+        <field name="twoHanded" column="twoHanded" type="boolean" nullable="false" unique="false"/>
+        <field name="dropLevel" column="DropLevel" type="smallint" nullable="false" unique="false">
+            <options>
+                <option name="unsigned">true</option>
+            </options>
+        </field>
+        <field name="sizeX" column="sizeX" type="smallint" nullable="false" unique="false">
+            <options>
+                <option name="unsigned">true</option>
+            </options>
+        </field>
+        <field name="sizeY" column="sizeY" type="smallint" nullable="false" unique="false">
+            <options>
+                <option name="unsigned">true</option>
+            </options>
+        </field>
+        <field name="damageMin" column="damageMin" type="smallint" nullable="false" unique="false">
+            <options>
+                <option name="unsigned">true</option>
+            </options>
+        </field>
+        <field name="damageMax" column="damageMax" type="smallint" nullable="false" unique="false">
+            <options>
+                <option name="unsigned">true</option>
+            </options>
+        </field>
+        <field name="defenceRate" column="defenceRate" type="smallint" nullable="false" unique="false">
+            <options>
+                <option name="unsigned">true</option>
+            </options>
+        </field>
+        <field name="defence" column="defence" type="smallint" nullable="false" unique="false">
+            <options>
+                <option name="unsigned">true</option>
+            </options>
+        </field>
+        <field name="attackSpeed" column="attackSpeed" type="smallint" nullable="false" unique="false">
+            <options>
+                <option name="unsigned">true</option>
+            </options>
+        </field>
+        <field name="walkingSpeed" column="walkingSpeed" type="smallint" nullable="false" unique="false">
+            <options>
+                <option name="unsigned">true</option>
+            </options>
+        </field>
+        <field name="durability" column="durability" type="smallint" nullable="false" unique="false">
+            <options>
+                <option name="unsigned">true</option>
+            </options>
+        </field>
+        <field name="raise" column="raise" type="smallint" nullable="false" unique="false">
+            <options>
+                <option name="unsigned">true</option>
+            </options>
+        </field>
+        <field name="requireStrength" column="requireStrength" type="smallint" nullable="false" unique="false">
+            <options>
+                <option name="unsigned">true</option>
+            </options>
+        </field>
+        <field name="requireAgility" column="requireAgility" type="smallint" nullable="false" unique="false">
+            <options>
+                <option name="unsigned">true</option>
+            </options>
+        </field>
+        <field name="requireEnergy" column="requireEnergy" type="smallint" nullable="false" unique="false">
+            <options>
+                <option name="unsigned">true</option>
+            </options>
+        </field>
+        <field name="requireLevel" column="requireLevel" type="smallint" nullable="false" unique="false">
+            <options>
+                <option name="unsigned">true</option>
+            </options>
+        </field>
+        <field name="value" column="value" type="smallint" nullable="false" unique="false">
+            <options>
+                <option name="unsigned">true</option>
+            </options>
+        </field>
+        <field name="dwAllowed" column="dwAllowed" type="boolean" nullable="false" unique="false">
+            <options>
+                <option name="unsigned">true</option>
+            </options>
+        </field>
+        <field name="dkAllowed" column="dkAllowed" type="boolean" nullable="false" unique="false">
+            <options>
+                <option name="unsigned">true</option>
+            </options>
+        </field>
+        <field name="elfAllowed" column="elfAllowed" type="boolean" nullable="false" unique="false">
+            <options>
+                <option name="unsigned">true</option>
+            </options>
+        </field>
+        <field name="mgAllowed" column="mgAllowed" type="boolean" nullable="false" unique="false">
+            <options>
+                <option name="unsigned">true</option>
+            </options>
+        </field>
+        <field name="iceAttribute" column="iceAttribute" type="boolean" nullable="false" unique="false">
+            <options>
+                <option name="unsigned">true</option>
+            </options>
+        </field>
+        <field name="poisonAttribute" column="poisonAttribute" type="boolean" nullable="false" unique="false">
+            <options>
+                <option name="unsigned">true</option>
+            </options>
+        </field>
+        <field name="lightningAttribute" column="lightningAttribute" type="boolean" nullable="false" unique="false">
+            <options>
+                <option name="unsigned">true</option>
+            </options>
+        </field>
+        <field name="fireAttribute" column="fireAttribute" type="boolean" nullable="false" unique="false">
+            <options>
+                <option name="unsigned">true</option>
+            </options>
+        </field>
+
+        <unique-constraints>
+            <unique-constraint columns="type,index" name="search_idx" />
+        </unique-constraints>
     </entity>
 
 </doctrine-mapping>

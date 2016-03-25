@@ -47,7 +47,15 @@ abstract class AbstractPacket
         }
 
         if ($this->class === 0xC3) {
+            Debug::dump($packet, 'To Encode: ');
             $packet = mu_encode_c3($packet);
+            Debug::dump($packet, 'Encoded: ');
+        }
+
+        if ($this->class === 0xC4) {
+            $a = $b = $c = null;
+            Debug::dump($packet, 'To Encode: ');
+            $packet = mu_encode_c3($packet, $a, $b, $c);
             Debug::dump($packet, 'Encoded: ');
         }
 

@@ -7,6 +7,7 @@ use MuServer\Entity\Character;
 use MuServer\Protocol\Debug;
 use MuServer\Protocol\Season097\ClientServer\AddPoint;
 use MuServer\Protocol\Season097\ClientServer\CharListRequest;
+use MuServer\Protocol\Season097\ClientServer\Chat;
 use MuServer\Protocol\Season097\ClientServer\CheckSum;
 use MuServer\Protocol\Season097\ClientServer\ClientClose;
 use MuServer\Protocol\Season097\ClientServer\CreateCharacter;
@@ -14,6 +15,7 @@ use MuServer\Protocol\Season097\ClientServer\DeleteCharacter;
 use MuServer\Protocol\Season097\ClientServer\Factory;
 use MuServer\Protocol\Season097\ClientServer\LoginRequest;
 use MuServer\Protocol\Season097\ClientServer\MapJoinRequest;
+use MuServer\Protocol\Season097\ClientServer\Move;
 use MuServer\Protocol\Season097\ClientServer\Ping;
 use MuServer\Protocol\Season097\ServerClient\AbstractPacket as SCPacket;
 use MuServer\Protocol\Season097\ClientServer\AbstractPacket as CSPacket;
@@ -29,6 +31,7 @@ use MuServer\Protocol\Season097\ServerClient\Hp;
 use MuServer\Protocol\Season097\ServerClient\InventoryListCount;
 use MuServer\Protocol\Season097\ServerClient\Mana;
 use MuServer\Protocol\Season097\ServerClient\Message;
+use MuServer\Protocol\Season097\ServerClient\RenderCharacter;
 use MuServer\Protocol\Season097\ServerClient\StatsInfo;
 use MuServer\Protocol\Season097\ServerClient\JoinResult;
 use MuServer\Protocol\Season097\ServerClient\LoginResult;
@@ -84,6 +87,7 @@ class Server extends SocketServer implements ServiceLocatorAwareInterface
             $packet = Factory::buildPacket($data);
         } catch (\RuntimeException $e) {
             echo $e->getMessage() . PHP_EOL;
+            $this->send($connection, new Message($e->getMessage(), 0x00));
             return;
         } catch (\Exception $e) {
             echo $e->getMessage() . PHP_EOL;
@@ -135,15 +139,32 @@ class Server extends SocketServer implements ServiceLocatorAwareInterface
             $this->send($connection, $result);
         } elseif ($packet instanceof MapJoinRequest) {
             /** @var Account $account */
-
             $account = $this->accounts->offsetGet($connection);
 
-            $character = $account->getCharacters()->first();
+            /** @var Character $character */
+            $character = $account->getCharacters()->filter(function (Character $character) use ($packet) {
+                return $character->getName() === $packet->getName();
+            })->first();
 
-            $result = new StatsInfo($character);
-            $this->send($connection, $result);
+            if ($character !== false) {
+                $this->players->attach($connection, $character);
 
-            $this->players->attach($connection, $character);
+                $result = new StatsInfo($character);
+                $this->send($connection, $result);
+
+                $this->sendAll(new RenderCharacter($this->clients->getHash($connection), $character), $connection);
+
+                foreach ($this->players as $c) {
+                    if ($c !== $connection) {
+                        $this->send($connection, new RenderCharacter($this->clients->getHash($connection), $character));
+                    }
+                }
+
+                $inventory = new InventoryListCount($character->getInventory());
+                $this->send($connection, $inventory);
+//                $connection->write(pack('c*', 0xc4, 0x00, 0x19, 0xc8, 0x0c, 0x35, 0xee, 0x0e, 0x5e, 0xa6, 0xe9, 0x41, 0x1c, 0x29, 0xdc, 0xe1, 0x28, 0x06, 0xd0, 0x34, 0x42, 0x7a, 0x3e, 0x64, 0x58));
+            }
+
             /*
             $mana = new Mana(10);
             $this->send($connection, $mana);
@@ -159,12 +180,6 @@ class Server extends SocketServer implements ServiceLocatorAwareInterface
 
             $inventory = new InventoryListCount([]);
             $this->send($connection, $inventory);
-
-            $connection->write(pack('c*', 0xc1, 0x06, 0x03, 0x00, 0xb6));
-
-            //magic list
-            $connection->write(pack('c*', 0xC1, 0x05, 0xF3, 0x11, 0x00));
-            $connection->write(pack('c*', 0xC1, 0x04, 0x0f, 0x11));
             */
         } else if ($packet instanceof CreateCharacter) {
             /** @var Account $account */
@@ -236,6 +251,17 @@ class Server extends SocketServer implements ServiceLocatorAwareInterface
 
             $result = new AddPointResult($success, $packet->getWhich(), $fillUpdate);
             $this->send($connection, $result);
+        } else if ($packet instanceof Chat) {
+            $this->sendAll(new \MuServer\Protocol\Season097\ServerClient\Chat($packet->getName(), $packet->getMessage()));
+        } else if ($packet instanceof Move) {
+            /** @var Character $character */
+            $character = $this->players->offsetGet($connection);
+            $character->setX($packet->getX());
+            $character->setY($packet->getX());
+            $this->sendAll(
+                new \MuServer\Protocol\Season097\ServerClient\Move($this->clients->getHash($connection), $packet->getX(), $packet->getY(), $packet->getPath()),
+                $connection
+            );
         }
     }
 
@@ -249,6 +275,7 @@ class Server extends SocketServer implements ServiceLocatorAwareInterface
 
         $connection->on('close', function () use ($that, $connection) {
             $this->clients->detach($connection);
+            $this->players->detach($connection);
         });
 
         $connection->on('data', array($this, 'receive'));
@@ -260,6 +287,17 @@ class Server extends SocketServer implements ServiceLocatorAwareInterface
     {
         echo 'Sent ' . get_class($packet) . PHP_EOL;
         $connection->write($packet->buildPacket());
+    }
+
+    public function sendAll(SCPacket $packet, ConnectionInterface $except = null)
+    {
+        foreach ($this->players as $connection) {
+            if ($except !== null && $connection === $except) {
+                continue;
+            }
+            echo 'Sent ' . get_class($packet) . PHP_EOL;
+            $connection->write($packet->buildPacket());
+        }
     }
 
     /**
@@ -280,5 +318,53 @@ class Server extends SocketServer implements ServiceLocatorAwareInterface
     public function getServiceLocator()
     {
         return $this->serviceLocator;
+    }
+
+    /**
+     * @return \SplObjectStorage
+     */
+    public function getClients()
+    {
+        return $this->clients;
+    }
+
+    /**
+     * @param \SplObjectStorage $clients
+     */
+    public function setClients($clients)
+    {
+        $this->clients = $clients;
+    }
+
+    /**
+     * @return \SplObjectStorage
+     */
+    public function getAccounts()
+    {
+        return $this->accounts;
+    }
+
+    /**
+     * @param \SplObjectStorage $accounts
+     */
+    public function setAccounts($accounts)
+    {
+        $this->accounts = $accounts;
+    }
+
+    /**
+     * @return \SplObjectStorage
+     */
+    public function getPlayers()
+    {
+        return $this->players;
+    }
+
+    /**
+     * @param \SplObjectStorage $players
+     */
+    public function setPlayers($players)
+    {
+        $this->players = $players;
     }
 }

@@ -1,5 +1,7 @@
 <?php
 
+//095d VERSION ONLY!!!
+
 require_once 'vendor/autoload.php';
 
 $keys = [0xFC, 0xCF, 0xAB];
@@ -66,4 +68,21 @@ for ($i = 0; $i < strlen($contents); $i += $step) {
     }
 }
 
-var_dump($items);
+$pdo = new PDO("mysql:host=localhost;dbname=mu", 'root', 'root123!');
+$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+foreach ($items as $item) {
+    array_walk($item, function (&$value) use (&$item) {
+        $value = '"' . $value . '"';
+    });
+
+unset($item['xxx']);
+
+    $pdo->exec('
+    INSERT INTO `mu_items` (`twoHanded`, `DropLevel`, `sizeX`, `sizeY`, `damageMin`, `damageMax`, `defenceRate`, `defence`, `attackSpeed`, `walkingSpeed`, `durability`, `raise`, `requireStrength`, `requireAgility`, `requireEnergy`, `requireLevel`, `value`, `dwAllowed`, `dkAllowed`, `elfAllowed`, `mgAllowed`, `iceAttribute`, `poisonAttribute`, `lightningAttribute`, `fireAttribute`, `type`, `index`, `name`) VALUES
+    (' . implode(',', $item) . ')
+    ');
+}
+
+
+//var_dump($items);

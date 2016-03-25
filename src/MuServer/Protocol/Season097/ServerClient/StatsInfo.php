@@ -42,6 +42,9 @@ class StatsInfo extends AbstractPacket
         $this->money = $character->getZen();
         $this->ctlCode = $character->getCode();
         $this->pkStatus = $character->getPk();
+        $this->x = $character->getX();
+        $this->y = $character->getY();
+        $this->map = $character->getMap();
     }
 
     public function setData()

@@ -25,17 +25,22 @@ $socket->on('connection', function ($stream) use ($clients) {
 
     $serverList = new SServerlist;
 
-    $server = new Server(0, 0);
-    $server->setIp('192.168.1.101');
-    $serverList->addServer($server);
+//    $server = new Server(0, 0);
+//    $server->setIp('192.168.1.101');
+//    $serverList->addServer($server);
 
     $server = new Server(0, 1);
-    $server->setIp('127.0.0.1');
+    $server->setIp('83.243.67.215');
     $serverList->addServer($server);
 
     $stream->on('data', function ($data) use ($clients, $stream, $serverList) {
         Protocol\Debug::dump($data, 'Received: ');
-        $packet = Factory::buildPacket($data);
+        try {
+            $packet = Factory::buildPacket($data);
+        } catch (\Exception $e) {
+            echo $e->getMessage() . PHP_EOL;
+            return;
+        }
 
         if ($packet instanceof CServerList) {
             $stream->write($serverList);

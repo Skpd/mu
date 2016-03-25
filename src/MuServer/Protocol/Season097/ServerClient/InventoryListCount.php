@@ -2,9 +2,12 @@
 
 namespace MuServer\Protocol\Season097\ServerClient;
 
+use MuServer\Entity\Inventory;
+use MuServer\Protocol\Debug;
+
 class InventoryListCount extends AbstractPacket
 {
-    protected $class = 0xC2;
+    protected $class = 0xC4;
     protected $code = 0xF3;
     protected $subCode = 0x10;
 
@@ -13,9 +16,12 @@ class InventoryListCount extends AbstractPacket
     /** @var InventoryList[] */
     private $inventory = [];
 
-    public function __construct(array $inventory = [])
+    public function __construct($inventory = [])
     {
-        $this->inventory = $inventory;
+        foreach ($inventory as $item) {
+            /** @var Inventory $item */
+            $this->inventory[] = new InventoryList($item);
+        }
     }
 
     public function setData()

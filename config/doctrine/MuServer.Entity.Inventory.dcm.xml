@@ -1,0 +1,28 @@
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                   https://raw.github.com/doctrine/doctrine2/master/doctrine-mapping.xsd">
+
+    <entity name="MuServer\Entity\Inventory" table="mu_inventory">
+        <id name="id" type="integer" column="id">
+            <generator strategy="AUTO"/>
+        </id>
+
+        <field name="position" type="smallint" nullable="false" unique="false"/>
+        <field name="durability" type="smallint" nullable="false" unique="false"/>
+        <field name="level" type="smallint" nullable="false" unique="false"/>
+        <field name="luck" type="boolean" nullable="false" unique="false"/>
+        <field name="add" type="smallint" nullable="false" unique="false"/>
+        <field name="excellent1" type="boolean" nullable="false" unique="false"/>
+        <field name="excellent2" type="boolean" nullable="false" unique="false"/>
+        <field name="excellent3" type="boolean" nullable="false" unique="false"/>
+        <field name="excellent4" type="boolean" nullable="false" unique="false"/>
+        <field name="excellent5" type="boolean" nullable="false" unique="false"/>
+        <field name="excellent6" type="boolean" nullable="false" unique="false"/>
+        <field name="excellent7" type="boolean" nullable="false" unique="false"/>
+
+        <many-to-one target-entity="MuServer\Entity\Item" field="item" />
+        <many-to-one target-entity="MuServer\Entity\Character" field="character" />
+    </entity>
+
+</doctrine-mapping>

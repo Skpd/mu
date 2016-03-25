@@ -2,28 +2,37 @@
 
 namespace MuServer\Protocol\Season097\ServerClient;
 
+use MuServer\Entity\Inventory;
+
 class InventoryList extends AbstractPacket
 {
     /** char */
     private $index = 0;
-    /** char[3] */
+    /** char[4] */
     private $item = '';
 
-    public function __construct(/*TODO inventory item */)
+    public function __construct(Inventory $inventoryItem = null)
     {
-        $this->setIndex(0);
-        $this->setItem(''
-            . chr(0xFF) // ??
-            . chr(0xFF) // ??
-            . chr(0xFF) // ??
-        );
-        //TODO
+        $this->setIndex($inventoryItem->getPosition());
+        $this->setItem(pack('c*',
+            $inventoryItem->getItem()->getType() << 5 | $inventoryItem->getItem()->getIndex(),
+            $inventoryItem->getLevel() << 3 | ($inventoryItem->getLuck() ? 4 : 0) | $inventoryItem->getAdd(),
+            $inventoryItem->getDurability(),
+            0
+            | ($inventoryItem->getExcellent1() ? 1 << 0 : 0)
+            | ($inventoryItem->getExcellent2() ? 1 << 1 : 0)
+            | ($inventoryItem->getExcellent3() ? 1 << 2 : 0)
+            | ($inventoryItem->getExcellent4() ? 1 << 3 : 0)
+            | ($inventoryItem->getExcellent5() ? 1 << 4 : 0)
+            | ($inventoryItem->getExcellent6() ? 1 << 5 : 0)
+            | ($inventoryItem->getExcellent7() ? 1 << 6 : 0)
+        ));
     }
 
     public function setData()
     {
-        $this->data  = chr($this->index); // [0]
-        $this->data .= str_pad($this->item, 3, chr(0xFF)); // [1] - [3]
+        $this->data  = chr($this->index);
+        $this->data .= str_pad($this->item, 4, chr(0x00));
     }
 
     public static function buildFrom($raw)

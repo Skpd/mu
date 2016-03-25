@@ -14,6 +14,12 @@ class Character
     const CLASS_BK = 160;
     const CLASS_ME = 192;
 
+    const STATE_POISONED = 1;
+    const STATE_FROZEN = 2;
+    const STATE_ATTACK = 4;
+    const STATE_DEFENCE = 8;
+    const STATE_NORMAL = 0;
+
     private $id;
     private $index;
     private $name;
@@ -30,9 +36,60 @@ class Character
     private $energy;
     private $zen;
     private $pk;
-    private $inventoryItems;
+    private $map = 0;
+    private $x = 0x8F;
+    private $y = 0x77;
+    private $inventory;
 
     private $account;
+
+    /**
+     * @return int
+     */
+    public function getMap()
+    {
+        return $this->map;
+    }
+
+    /**
+     * @param int $map
+     */
+    public function setMap($map)
+    {
+        $this->map = $map;
+    }
+
+    /**
+     * @return int
+     */
+    public function getX()
+    {
+        return $this->x;
+    }
+
+    /**
+     * @param int $x
+     */
+    public function setX($x)
+    {
+        $this->x = $x;
+    }
+
+    /**
+     * @return int
+     */
+    public function getY()
+    {
+        return $this->y;
+    }
+
+    /**
+     * @param int $y
+     */
+    public function setY($y)
+    {
+        $this->y = $y;
+    }
 
     /**
      * @return mixed
@@ -213,17 +270,17 @@ class Character
     /**
      * @return mixed
      */
-    public function getInventoryItems()
+    public function getInventory()
     {
-        return $this->inventoryItems;
+        return $this->inventory;
     }
 
     /**
      * @param mixed $inventory
      */
-    public function setInventoryItems($inventory)
+    public function setInventory($inventory)
     {
-        $this->inventoryItems = $inventory;
+        $this->inventory = $inventory;
     }
 
     /**

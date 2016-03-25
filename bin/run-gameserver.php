@@ -13,5 +13,8 @@ $gs->init();
 /** @var \React\EventLoop\LoopInterface $loop */
 $loop = $sm->get('GameLoop');
 
+$regen = new \MuServer\Game\Event\Regen($gs->getPlayers());
+$loop->addPeriodicTimer($regen->getInterval(), $regen->getCallback());
+
 $loop->run();
 

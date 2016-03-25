@@ -18,7 +18,6 @@ class Factory
         $head  = $sub = 0;
 
         if ($class === 0xC1) {
-            Security::extract($rawData);
             $head = ord($rawData[2]);
             $sub  = ord($rawData[3]);
 
@@ -29,6 +28,10 @@ class Factory
                     return new ServerList(substr($rawData, 4));
                 }
             }
+
+            Security::extract($rawData);
+            $head = ord($rawData[2]);
+            $sub  = ord($rawData[3]);
 
             if ($head === 0xF3) {
                 if ($sub === 0x00) {
@@ -49,6 +52,14 @@ class Factory
                     return new ClientClose(substr($rawData, 4));
                 }
             }
+
+            if ($head === 0x00) {
+                return new Chat(substr($rawData, 3));
+            }
+
+            if ($head === 0x10) {
+                return new Move(substr($rawData, 3));
+            }
         }
 
         if ($class === 0xC3) {
@@ -58,7 +69,7 @@ class Factory
                 return new LoginRequest(substr($rawData, 4));
             }
 
-            if ($head === 0xF1 && $sub === 0x03) {
+            if ($head === 0xF1 && $sub === 0x03 || $sub === 0x02) {
                 return new ClientClose(substr($rawData, 4));
 //                return new CheckSum(substr($rawData, 4));
             }

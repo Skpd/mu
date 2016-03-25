@@ -14,11 +14,14 @@ class Weather extends AbstractPacket
         $this->data = chr($this->weather);
     }
 
+    public function __construct($weather)
+    {
+        $this->weather = $weather;
+    }
+
     public static function buildFrom($raw)
     {
-        $packet = new self();
-        $packet->setWeather(ord($raw));
-        return $packet;
+        return new self(ord($raw));
     }
 
     /**
