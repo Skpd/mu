@@ -33,6 +33,27 @@ class Inventory
     private $add;
 
     /**
+     * @var integer
+     */
+    private $skill;
+
+    /**
+     * @return int
+     */
+    public function getSkill()
+    {
+        return $this->skill;
+    }
+
+    /**
+     * @param int $skill
+     */
+    public function setSkill($skill)
+    {
+        $this->skill = $skill;
+    }
+
+    /**
      * @var boolean
      */
     private $excellent1;
@@ -61,11 +82,6 @@ class Inventory
      * @var boolean
      */
     private $excellent6;
-
-    /**
-     * @var boolean
-     */
-    private $excellent7;
 
     /**
      * @var integer
@@ -360,30 +376,6 @@ class Inventory
     public function getExcellent6()
     {
         return $this->excellent6;
-    }
-
-    /**
-     * Set excellent7
-     *
-     * @param boolean $excellent7
-     *
-     * @return Inventory
-     */
-    public function setExcellent7($excellent7)
-    {
-        $this->excellent7 = $excellent7;
-
-        return $this;
-    }
-
-    /**
-     * Get excellent7
-     *
-     * @return boolean
-     */
-    public function getExcellent7()
-    {
-        return $this->excellent7;
     }
 
     /**

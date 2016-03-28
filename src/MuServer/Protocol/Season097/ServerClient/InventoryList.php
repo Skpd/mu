@@ -3,6 +3,7 @@
 namespace MuServer\Protocol\Season097\ServerClient;
 
 use MuServer\Entity\Inventory;
+use MuServer\Protocol\Debug;
 
 class InventoryList extends AbstractPacket
 {
@@ -15,17 +16,20 @@ class InventoryList extends AbstractPacket
     {
         $this->setIndex($inventoryItem->getPosition());
         $this->setItem(pack('c*',
-            $inventoryItem->getItem()->getType() << 5 | $inventoryItem->getItem()->getIndex(),
-            $inventoryItem->getLevel() << 3 | ($inventoryItem->getLuck() ? 4 : 0) | $inventoryItem->getAdd(),
+            $inventoryItem->getItem()->getType() << 5
+                | $inventoryItem->getItem()->getIndex(),
+            ($inventoryItem->getSkill() ? 1 << 7 : 0)
+                | $inventoryItem->getLevel() << 3
+                | ($inventoryItem->getLuck() ? 4 : 0)
+                | $inventoryItem->getAdd(),
             $inventoryItem->getDurability(),
-            0
-            | ($inventoryItem->getExcellent1() ? 1 << 0 : 0)
-            | ($inventoryItem->getExcellent2() ? 1 << 1 : 0)
-            | ($inventoryItem->getExcellent3() ? 1 << 2 : 0)
-            | ($inventoryItem->getExcellent4() ? 1 << 3 : 0)
-            | ($inventoryItem->getExcellent5() ? 1 << 4 : 0)
-            | ($inventoryItem->getExcellent6() ? 1 << 5 : 0)
-            | ($inventoryItem->getExcellent7() ? 1 << 6 : 0)
+            ($inventoryItem->getExcellent1() ? 1 << 0 : 0)
+                | ($inventoryItem->getExcellent2() ? 1 << 1 : 0)
+                | ($inventoryItem->getExcellent3() ? 1 << 2 : 0)
+                | ($inventoryItem->getExcellent4() ? 1 << 3 : 0)
+                | ($inventoryItem->getExcellent5() ? 1 << 4 : 0)
+                | ($inventoryItem->getExcellent6() ? 1 << 5 : 0)
+                | ($inventoryItem->getItem()->getType() > 7 ? 1 << 7 : 0)
         ));
     }
 
