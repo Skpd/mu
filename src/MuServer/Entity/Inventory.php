@@ -1,12 +1,26 @@
 <?php
 
 namespace MuServer\Entity;
+use Doctrine\ORM\PersistentCollection;
 
 /**
  * Inventory
  */
 class Inventory
 {
+    const POS_PRIMARY = 0;
+    const POS_SECONDARY = 1;
+    const POS_HELM = 2;
+    const POS_ARMOR = 3;
+    const POS_PANTS = 4;
+    const POS_GLOVES = 5;
+    const POS_BOOTS = 6;
+    const POS_WINGS = 7;
+    const POS_PET = 8;
+    const POS_PENDANT = 9;
+    const POS_RING_RIGHT = 10;
+    const POS_RING_LEFT = 11;
+
     /**
      * @var integer
      */
@@ -36,22 +50,6 @@ class Inventory
      * @var integer
      */
     private $skill;
-
-    /**
-     * @return int
-     */
-    public function getSkill()
-    {
-        return $this->skill;
-    }
-
-    /**
-     * @param int $skill
-     */
-    public function setSkill($skill)
-    {
-        $this->skill = $skill;
-    }
 
     /**
      * @var boolean
@@ -97,6 +95,65 @@ class Inventory
      * @var \MuServer\Entity\Character
      */
     private $character;
+
+    /**
+     * @param PersistentCollection|Inventory[] $inventoryItems
+     * @param int $position
+     * @return Inventory|null
+     */
+    public static function filter($inventoryItems, $position)
+    {
+        foreach ($inventoryItems as $inventory) {
+            if ($inventory->getPosition() === $position) {
+                return $inventory;
+            }
+        }
+
+        return null;
+    }
+
+    public function isExcl()
+    {
+        return $this->excellent1 || $this->excellent2 || $this->excellent3 || $this->excellent4 || $this->excellent5 || $this->excellent6;
+    }
+
+    /**
+     * @return int
+     */
+    public function getSkill()
+    {
+        return $this->skill;
+    }
+
+    /**
+     * @param int $skill
+     */
+    public function setSkill($skill)
+    {
+        $this->skill = $skill;
+    }
+
+    /**
+     * Convert item level to 3-byte number
+     * @return int
+     */
+    public function getShortLevel()
+    {
+        switch ($this->level) {
+            case 11: return 7;
+            case 10: return 6;
+            case 9: return 5;
+            case 8: return 4;
+            case 7: return 3;
+            case 6:
+            case 5:
+                return 2;
+            case 4:
+            case 3:
+                return 1;
+            default: return 0;
+        }
+    }
 
     /**
      * @return Character

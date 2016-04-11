@@ -2,6 +2,8 @@
 
 namespace MuServer\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+
 class Character
 {
     const CLASS_DW = 0;
@@ -268,7 +270,7 @@ class Character
     }
 
     /**
-     * @return mixed
+     * @return Inventory[]|ArrayCollection
      */
     public function getInventory()
     {
